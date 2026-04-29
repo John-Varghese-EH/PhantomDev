@@ -13,9 +13,13 @@ members = [
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-authors = ["PhantomDev Contributors"]
+authors = ["John Varghese (J0X) <john@phantomdev.io>"]
 license = "MIT"
-repository = "https://github.com/phantomdev/phantomdev"
+description = "A suite of tools for preserving coding signatures and humanizing AI agent outputs."
+repository = "https://github.com/John-Varghese-EH/PhantomDev"
+homepage = "https://phantomdev.io"
+keywords = ["ai", "humanizer", "git", "stealth", "agent"]
+categories = ["development-tools", "command-line-utilities"]
 
 [workspace.dependencies]
 # Core

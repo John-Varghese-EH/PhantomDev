@@ -7,70 +7,89 @@
 
 # PhantomDev
 
-**The Adversarial Stylometry Framework for the AI-Augmented Developer**
+**Adversarial Stylometry Framework for the AI-Augmented Developer**
 
 > Inject human entropy back into your workflow.
 
-## 🎯 Vision
+[![Crates.io](https://img.shields.io/crates/v/phantomdev.svg)](https://crates.io/crates/phantomdev)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Build](https://github.com/John-Varghese-EH/PhantomDev/actions/workflows/ci.yml/badge.svg)](https://github.com/John-Varghese-EH/PhantomDev/actions)
 
-In 2026, the "AI-generated" tag is becoming a new form of technical debt. Whether it's academic detectors flagging student code or recruiters scanning GitHub histories for "lazy" AI patterns, there is a growing need for **Stylistic Sovereignty**.
+---
 
-**PhantomDev** isn't about "cheating"; it's about **privacy and professional branding**. It allows developers to use high-productivity AI tools while ensuring the final output matches their own unique "human" signature—preserving the soul of the codebase.
+## Overview
 
-## ✨ Features
+In 2026, AI-generated code carries an identifiable signature. Whether it's academic integrity systems, hiring pipelines, or code review tools, pattern-based detection is increasingly used to flag work that doesn't "look human."
 
-### 🔍 AI Detection
-- Local model support (RoBERTa-based detection)
-- Cloud API fallback (OpenRouter, Anthropic)
-- Pattern detection (watermarks, emoji overuse, uniform comments)
-- Multi-language support (Rust, Python, JavaScript/TypeScript, Go, C++)
+**PhantomDev** addresses this directly. It's not about deception-it's about **stylometric sovereignty**. Developers should be able to use high-productivity AI tooling without sacrificing ownership of their own coding identity.
 
-### 🎭 Code Humanization
-- Repo-specific style learning
-- Variable/function renaming
-- Comment injection/removal
-- Entropy injection for natural variation
+PhantomDev learns your personal style from your repository history and applies it back to AI-assisted output-transforming variable names, comment phrasing, line cadence, and commit message structure to match how *you* actually write code.
 
-### ⏱️ Temporal Obfuscation (Jitter Engine)
-- Delayed staging buffer
-- Simulated human development cycles
-- Configurable timing patterns
+---
 
-### 📊 Stealth Scoring
-- Real-time stealth score calculation
-- Per-file analysis
-- Pattern-based detection
+## Features
 
-### 🖥️ TUI Dashboard
-- Visual stealth score display
-- Detection heatmap
+### AI Detection
+
+- Local inference using RoBERTa-based models (no API required)
+- Cloud fallback via OpenRouter and Anthropic
+- Pattern detection for common AI tells: watermarks, uniform commenting, emoji overuse
+- Multi-language support: Rust, Python, JavaScript/TypeScript, Go, C++
+
+### Code Humanization
+
+- Repository-aware style learning from your commit history
+- Variable and function renaming to match personal conventions
+- Targeted comment injection and removal
+- Entropy injection for natural stylistic variation
+
+### Temporal Obfuscation (Jitter Engine)
+
+- Delayed staging buffer to simulate organic development pace
+- Configurable timing windows (min/max delay in seconds)
+- Designed to avoid commit-frequency fingerprinting
+
+### Stealth Scoring
+
+- Real-time per-file stealth score
+- Pattern-based breakdown of detected AI signatures
+- Threshold-configurable alerting
+
+### TUI Dashboard
+
+- Terminal UI for live stealth score monitoring
+- Detection heatmap per file
 - Style profile visualization
 
-### 🕵️ Undercover Mode
-- Transform AI-generated content to human-like patterns
-- Adversarial stylometry transformer
-- Bypass AI detection filters
-- Automatic word replacement and comment transformation
+### Undercover Mode
 
-### 🔗 Pre-Commit Framework
-- Automatic AI-pattern detection before commits
-- Auto-fixing of detected issues
-- Configurable stealth checks
-- Cross-platform support
+- Commit message transformation via adversarial stylometry
+- Code comment rewriting with human-idiomatic phrasing
+- Variable name substitution based on personal naming patterns
 
-## 🚀 Installation
+### Pre-Commit Integration
 
-### Easy Install (Recommended)
+- Git hook-based detection before every commit
+- Auto-fix mode for common AI patterns
+- Cross-platform, zero-dependency hook scripts
+
+---
+
+## Installation
+
+### Recommended (Easy Install)
+
+Clone the repository and run the built-in installer:
 
 ```bash
-# Clone the repository
 git clone https://github.com/John-Varghese-EH/PhantomDev.git
 cd PhantomDev
-
-# Run easy install
 cargo run -- easy-install
+```
 
-# Or install IDE skills for specific IDE
+To also install IDE-specific skill files:
+
+```bash
 cargo run -- easy-install --ide claude
 cargo run -- easy-install --ide cursor
 cargo run -- easy-install --ide windsurf
@@ -80,15 +99,10 @@ cargo run -- easy-install --ide antigravity
 ### From Source
 
 ```bash
-# Clone the repository
 git clone https://github.com/John-Varghese-EH/PhantomDev.git
 cd PhantomDev
-
-# Build the project
 cargo build --release
-
-# Install the binary
-cargo install --path .
+cargo install --path crates/cli
 ```
 
 ### One-Click Installer
@@ -97,17 +111,19 @@ cargo install --path .
 curl -sSL https://phantomdev.io/install.sh | bash
 ```
 
-## 📖 Usage
+---
 
-### Initialize PhantomDev
+## Usage
+
+### Initialize a Project
 
 ```bash
 phantomdev init
 ```
 
-This creates a `.phantomdev` directory with configuration files.
+Creates a `.phantomdev/` directory with a default configuration file.
 
-### Scan for AI-Generated Content
+### Scan for AI Patterns
 
 ```bash
 # Scan staged files
@@ -116,7 +132,7 @@ phantomdev scan
 # Scan specific files
 phantomdev scan --files src/main.rs src/lib.rs
 
-# Show detailed output
+# Verbose output with per-pattern breakdown
 phantomdev scan --verbose
 ```
 
@@ -126,43 +142,36 @@ phantomdev scan --verbose
 # Humanize staged files
 phantomdev humanize
 
-# Humanize specific files
+# Target specific files
 phantomdev humanize --files src/main.rs
 
-# Set entropy level
+# Control entropy level (0.0 = minimal changes, 1.0 = aggressive)
 phantomdev humanize --entropy 0.7
 ```
 
-### Check Stealth Score
+### Stealth Score
 
 ```bash
-# Show overall score
 phantomdev score
-
-# Show detailed breakdown
 phantomdev score --detailed
 ```
 
-### Launch Dashboard
+### TUI Dashboard
 
 ```bash
 phantomdev dashboard
 ```
 
-### Configure
+### Configuration
 
 ```bash
-# Show current configuration
 phantomdev config --show
-
-# Reset to defaults
 phantomdev config --reset
 ```
 
-### Install Git Hooks
+### Git Hooks
 
 ```bash
-# Copy hooks to .git/hooks
 cp hooks/pre-commit .git/hooks/
 cp hooks/commit-msg .git/hooks/
 chmod +x .git/hooks/pre-commit .git/hooks/commit-msg
@@ -171,89 +180,90 @@ chmod +x .git/hooks/pre-commit .git/hooks/commit-msg
 ### Undercover Mode
 
 ```bash
-# Transform commit message
+# Rewrite a commit message
 phantomdev undercover --message "feat: Implement comprehensive user authentication"
 
-# Transform code comments
+# Rewrite in-file comments
 phantomdev undercover --comments
 
-# Transform variable names
+# Rename variables to match personal style
 phantomdev undercover --variables
 
-# Transform everything
+# Apply all transformations
 phantomdev undercover --comments --variables
 ```
 
 ### Pre-Commit Framework
 
 ```bash
-# Install pre-commit framework
 pip install pre-commit
-
-# Initialize hooks
 pre-commit install
-
-# Run hooks manually
 pre-commit run --all-files
 ```
 
-## ⚙️ Configuration
+---
 
-PhantomDev uses a TOML configuration file located at `.phantomdev/config.toml`:
+## Configuration
+
+PhantomDev reads from `.phantomdev/config.toml`:
 
 ```toml
 [detection]
-threshold = 0.15              # AI probability threshold
-use_local = true              # Use local models
-use_cloud_fallback = true     # Use cloud API as fallback
+threshold = 0.15              # AI probability threshold (0.0 - 1.0)
+use_local = true              # Prioritize local models
+use_cloud_fallback = true     # Fall back to cloud API if local score is uncertain
 
 [humanization]
-auto_humanize = false         # Auto-humanize on commit
-entropy_level = 0.5           # Entropy level (0.0 - 1.0)
+auto_humanize = false         # Run humanization automatically on commit
+entropy_level = 0.5           # Transformation intensity (0.0 - 1.0)
 
 [jitter]
 enabled = false               # Enable temporal obfuscation
-min_delay_secs = 60           # Minimum delay in seconds
-max_delay_secs = 300          # Maximum delay in seconds
+min_delay_secs = 60
+max_delay_secs = 300
 
 [api]
-openrouter_key = ""           # OpenRouter API key (optional)
-anthropic_key = ""            # Anthropic API key (optional)
-base_url = ""                 # API base URL (optional)
+openrouter_key = ""           # Optional: OpenRouter API key
+anthropic_key = ""            # Optional: Anthropic API key
+base_url = ""                 # Optional: Custom API base URL
 ```
 
-## 🏗️ Architecture
+---
+
+## Architecture
 
 ```
 phantomdev/
 ├── crates/
-│   ├── core/          # Core library (types, traits)
+│   ├── core/          # Shared types and traits
 │   ├── detector/      # AI detection engine
-│   ├── humanizer/     # Code transformation
-│   ├── jitter/        # Temporal obfuscation
+│   ├── humanizer/     # Code transformation logic
+│   ├── jitter/        # Temporal obfuscation engine
 │   ├── undercover/    # Adversarial stylometry transformer
-│   ├── cli/           # Main CLI binary
-│   └── tui/           # Terminal UI dashboard
-├── rules/             # IDE rules (Cursor, Claude, Windsurf, Antigravity, etc)
-├── skills/            # IDE skills for agent frameworks
-├── hooks/             # Git hooks
+│   ├── cli/           # Main binary
+│   └── tui/           # Terminal UI
+├── rules/             # IDE rule files (Claude, Cursor, Windsurf, Antigravity)
+├── skills/            # IDE skill files for agent frameworks
+├── hooks/             # Git hook scripts
 ├── scripts/           # Pre-commit and utility scripts
 └── models/            # Local model storage
 ```
 
-## 🧪 Testing
+---
+
+## Testing
 
 ```bash
-# Run all tests
+# All tests
 cargo test
 
-# Run tests with output
+# With stdout output
 cargo test -- --nocapture
 
-# Run specific test
+# Single test by name
 cargo test test_detector_creation
 
-# Run tests for specific crate
+# Per crate
 cargo test -p phantomdev-core
 cargo test -p phantomdev-detector
 cargo test -p phantomdev-humanizer
@@ -262,74 +272,86 @@ cargo test -p phantomdev-undercover
 cargo test -p phantomdev-tui
 ```
 
-## 🏗️ Building
+## Building
 
 ```bash
-# Build in debug mode
-cargo build
+cargo build                  # Debug
+cargo build --release        # Optimized
 
-# Build in release mode
-cargo build --release
-
-# Build for specific target
+# Cross-compile targets
 cargo build --release --target x86_64-unknown-linux-gnu
 cargo build --release --target aarch64-apple-darwin
 cargo build --release --target x86_64-pc-windows-msvc
 ```
 
-## 📦 Publishing
+## Publishing to crates.io
+
+See [cargo-instruction.md](cargo-instruction.md) for the full publishing sequence.
 
 ```bash
-# Publish to crates.io
 cargo publish -p phantomdev-core
 cargo publish -p phantomdev-detector
 cargo publish -p phantomdev-humanizer
 cargo publish -p phantomdev-jitter
+cargo publish -p phantomdev-undercover
 cargo publish -p phantomdev-tui
 cargo publish -p phantomdev
 ```
 
-## 🔒 Security
+---
 
-PhantomDev is designed with security in mind:
+## Security
 
-- **Local-first detection**: Prioritizes local models over cloud APIs
-- **No telemetry**: Does not collect usage data
-- **Open source**: All code is available for audit
-- **Configurable cloud fallback**: Can disable cloud API usage entirely
+PhantomDev is built with a local-first design:
 
-For security concerns, see [SECURITY.md](SECURITY.md).
+- All detection runs locally by default; cloud APIs are strictly opt-in
+- No telemetry or usage data is collected
+- Fully open-source; all code is auditable
+- Cloud fallback can be disabled entirely via configuration
 
-## 🤝 Contributing
+See [SECURITY.md](SECURITY.md) for the responsible disclosure policy.
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting PRs.
+---
 
-## 📄 License
+## Contributing
 
-MIT License - see [LICENSE](LICENSE) for details.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a pull request. Follow the existing code style and include tests for new behavior.
 
-## 📜 Changelog
+## License
 
-See [CHANGELOG.md](CHANGELOG.md) for version history.
+see [LICENSE](LICENSE).
 
-## 🙏 Acknowledgments
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
+
+## Acknowledgments
 
 - Built with [Rust](https://www.rust-lang.org/)
-- ML inference powered by [Candle](https://github.com/huggingface/candle)
-- TUI powered by [Ratatui](https://github.com/ratatui-org/ratatui)
+- ML inference via [Candle](https://github.com/huggingface/candle) (HuggingFace)
+- Terminal UI via [Ratatui](https://github.com/ratatui-org/ratatui)
 
-## 📞 Support
+## 💗 Support the Project
 
-- GitHub Issues: [https://github.com/John-Varghese-EH/PhantomDev/issues](https://github.com/John-Varghese-EH/PhantomDev/issues)
-- Discord: [https://discord.gg/phantomdev](https://discord.gg/phantomdev)
+This is an active, evolving project. If it helped you, consider supporting continued development ☺️:
 
-## 👨‍💻 Author
+[![Buy me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/CyberTrinity)
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/CyberTrinity)
+[![Sponsor](https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/John-Varghese-EH)
 
-Built with ❤️ by [John Varghese (J0X)](https://github.com/John-Varghese-EH)
+---
 
+## Author
+
+[John Varghese (J0X)](https://github.com/John-Varghese-EH)
 - GitHub: [John-Varghese-EH](https://github.com/John-Varghese-EH)
 - LinkedIn: [John Varghese](https://linkedin.com/in/John--Varghese)
 
 ---
 
-**PhantomDev** - Preserve your coding signature in the age of AI.
+<div align="center">
+
+**⭐ Star this repo if it helped you.**
+*PhantomDev - preserve your coding signature in the age of AI.*
+
+</div>
