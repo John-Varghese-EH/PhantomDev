@@ -140,6 +140,9 @@ impl UndercoverEngine {
     pub fn transform_commit_message(&self, message: &str) -> String {
         let mut result = message.to_string();
 
+        // Normalize AI-specific symbols first
+        result = self.normalize_symbols(&result);
+
         // Strip conventional commit prefixes if not requested
         result = self.strip_conventional_prefixes(&result);
 
@@ -162,6 +165,9 @@ impl UndercoverEngine {
     pub fn transform_comments(&self, code: &str) -> String {
         let mut result = code.to_string();
 
+        // Normalize AI-specific symbols first
+        result = self.normalize_symbols(&result);
+
         // Convert docblocks to inline comments
         result = self.convert_docblocks_to_inline(&result);
 
@@ -183,6 +189,9 @@ impl UndercoverEngine {
     pub fn transform_variable_names(&self, code: &str) -> String {
         let mut result = code.to_string();
 
+        // Normalize AI-specific symbols first
+        result = self.normalize_symbols(&result);
+
         // Apply word replacements to variable names
         for (formal, informal) in &self.word_replacements {
             let pattern = format!(r"\b{}\b", regex::escape(formal));
@@ -190,6 +199,58 @@ impl UndercoverEngine {
                 result = re.replace_all(&result, informal).to_string();
             }
         }
+
+        result
+    }
+
+    /// Normalize AI-specific symbols to human-like characters
+    fn normalize_symbols(&self, text: &str) -> String {
+        let mut result = text.to_string();
+
+        // Replace em dashes (—) with hyphens (-)
+        result = result.replace('—', '-');
+
+        // Replace en dashes (–) with hyphens (-)
+        result = result.replace('–', '-');
+
+        // Replace fancy quotes with regular quotes
+        result = result.replace('«', '"').replace('»', '"');
+        result = result.replace('‹', '\'').replace('›', '\'');
+        result = result.replace('「', '"').replace('」', '"');
+        result = result.replace('『', '\'').replace('』', '\'');
+
+        // Replace fancy apostrophes with regular apostrophes
+        result = result.replace(''', '\'');
+        result = result.replace(''', '\'');
+
+        // Replace ellipsis (…) with three dots
+        result = result.replace('…', "...");
+
+        // Replace invisible spaces and zero-width characters
+        result = result.replace('\u{200B}', ""); // Zero-width space
+        result = result.replace('\u{200C}', ""); // Zero-width non-joiner
+        result = result.replace('\u{200D}', ""); // Zero-width joiner
+        result = result.replace('\u{FEFF}', ""); // Zero-width no-break space
+        result = result.replace('\u{00A0}', " "); // Non-breaking space
+        result = result.replace('\u{2002}', " "); // En space
+        result = result.replace('\u{2003}', " "); // Em space
+        result = result.replace('\u{2009}', " "); // Thin space
+
+        // Replace fancy arrows with regular text
+        result = result.replace('→', "->");
+        result = result.replace('←', "<-");
+        result = result.replace('↑', "^");
+        result = result.replace('↓', "v");
+
+        // Replace fancy bullets with regular bullets
+        result = result.replace('•', "-");
+        result = result.replace('◦', "-");
+        result = result.replace('‣', "-");
+
+        // Replace other fancy punctuation
+        result = result.replace('…', "...");
+        result = result.replace('‥', "..");
+        result = result.replace('⋯', "...");
 
         result
     }
@@ -436,5 +497,18 @@ mod tests {
         let engine = UndercoverEngine::new();
         let result = engine.convert_docblocks_to_inline("/** This is a docblock */");
         assert!(result.starts_with("//"));
+    }
+
+    #[test]
+    fn test_symbol_normalization() {
+        let engine = UndercoverEngine::new();
+        let result = engine.normalize_symbols("test—value");
+        assert_eq!(result, "test-value");
+
+        let result = engine.normalize_symbols("test–value");
+        assert_eq!(result, "test-value");
+
+        let result = engine.normalize_symbols("test…value");
+        assert_eq!(result, "test...value");
     }
 }

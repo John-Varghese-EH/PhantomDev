@@ -352,6 +352,7 @@ This is an active, evolving project. If it helped you, consider supporting conti
 <div align="center">
 
 **⭐ Star this repo if it helped you.**
+
 *PhantomDev - preserve your coding signature in the age of AI.*
 
 </div>

@@ -89,6 +89,7 @@ jobs:
           cargo publish -p phantomdev-detector
           cargo publish -p phantomdev-humanizer
           cargo publish -p phantomdev-jitter
+          cargo publish -p phantomdev-undercover
           cargo publish -p phantomdev-tui
           cargo publish -p phantomdev
 
