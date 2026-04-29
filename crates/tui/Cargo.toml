@@ -1,0 +1,17 @@
+[package]
+name = "phantomdev-tui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+phantomdev-core = { path = "../core" }
+
+tokio = { workspace = true, features = ["full"] }
+serde.workspace = true
+anyhow.workspace = true
+
+ratatui.workspace = true
+crossterm.workspace = true

@@ -1,0 +1,9 @@
+/home/j0x/Documents/GitHub/PhantomDev/test.rs
+/home/j0x/Documents/GitHub/PhantomDev/crates/core/src/lib.rs
+/home/j0x/Documents/GitHub/PhantomDev/crates/detector/src/lib.rs
+/home/j0x/Documents/GitHub/PhantomDev/crates/humanizer/src/lib.rs
+/home/j0x/Documents/GitHub/PhantomDev/crates/jitter/src/lib.rs
+/home/j0x/Documents/GitHub/PhantomDev/crates/cli/src/main.rs
+/home/j0x/Documents/GitHub/PhantomDev/crates/tui/src/lib.rs
+/home/j0x/Documents/GitHub/PhantomDev/README.md
+/home/j0x/Documents/GitHub/PhantomDev/CLAUDE.md

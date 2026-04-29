@@ -1,0 +1,30 @@
+[package]
+name = "phantomdev"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "phantomdev"
+path = "src/main.rs"
+
+[dependencies]
+phantomdev-core = { path = "../core" }
+phantomdev-detector = { path = "../detector" }
+phantomdev-humanizer = { path = "../humanizer" }
+phantomdev-jitter = { path = "../jitter" }
+phantomdev-tui = { path = "../tui" }
+
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+
+clap.workspace = true
+colored.workspace = true
+
+tracing.workspace = true
+tracing-subscriber.workspace = true

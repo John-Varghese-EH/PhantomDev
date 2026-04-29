@@ -1,0 +1,18 @@
+[package]
+name = "phantomdev-jitter"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+phantomdev-core = { path = "../core" }
+
+tokio = { workspace = true, features = ["full"] }
+serde.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+
+chrono = "0.4"
+rand = "0.8"
