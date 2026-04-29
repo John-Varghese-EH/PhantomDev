@@ -12,7 +12,7 @@ use ratatui::{
     backend::CrosstermBackend,
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
-    text::{Span, Line, Text},
+    text::{Span, Line},
     widgets::{
         Block, Borders, Gauge, Paragraph, Wrap, BarChart, List, ListItem, Tabs,
     },
@@ -25,7 +25,7 @@ use crossterm::{
 };
 use std::io;
 use std::time::Duration;
-use phantomdev_core::{StealthScore, DetectionResult, Pattern, PatternType};
+use phantomdev_core::{StealthScore, DetectionResult, Pattern};
 
 /// Main TUI application
 pub struct PhantomTui {
@@ -292,7 +292,7 @@ impl PhantomTui {
             .block(Block::default().borders(Borders::ALL).title("Pattern Detection"))
             .bar_width(8)
             .bar_gap(2)
-            .bars(&bars)
+            .bar_set(&bars)
             .style(Style::default().fg(Color::Cyan))
             .value_style(Style::default().fg(Color::White).add_modifier(Modifier::BOLD));
 
