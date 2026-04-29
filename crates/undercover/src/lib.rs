@@ -8,7 +8,6 @@
 //! GitHub: https://github.com/John-Varghese-EH
 //! LinkedIn: https://linkedin.com/in/John--Varghese
 
-use anyhow::Result;
 use regex::Regex;
 use rand::Rng;
 use std::collections::HashMap;
@@ -208,20 +207,20 @@ impl UndercoverEngine {
         let mut result = text.to_string();
 
         // Replace em dashes (—) with hyphens (-)
-        result = result.replace('—', '-');
+        result = result.replace('—', "-");
 
         // Replace en dashes (–) with hyphens (-)
-        result = result.replace('–', '-');
+        result = result.replace('–', "-");
 
         // Replace fancy quotes with regular quotes
-        result = result.replace('«', '"').replace('»', '"');
-        result = result.replace('‹', '\'').replace('›', '\'');
-        result = result.replace('「', '"').replace('」', '"');
-        result = result.replace('『', '\'').replace('』', '\'');
+        result = result.replace('«', "\"").replace('»', "\"");
+        result = result.replace('‹', "'").replace('›', "'");
+        result = result.replace('「', "\"").replace('」', "\"");
+        result = result.replace('『', "'").replace('』', "'");
 
         // Replace fancy apostrophes with regular apostrophes
-        result = result.replace(''', '\'');
-        result = result.replace(''', '\'');
+        result = result.replace('\u{2018}', "'");
+        result = result.replace('\u{2019}', "'");
 
         // Replace ellipsis (…) with three dots
         result = result.replace('…', "...");
