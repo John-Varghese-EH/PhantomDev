@@ -1,7 +1,9 @@
+```
     /\
    /__\    PhantomDev
   /    \   Humanizer for AI Agents & Commits
  /______\  github.com/John-Varghese-EH/PhantomDev
+```
 
 # PhantomDev
 
@@ -44,7 +46,36 @@ In 2026, the "AI-generated" tag is becoming a new form of technical debt. Whethe
 - Detection heatmap
 - Style profile visualization
 
+### 🕵️ Undercover Mode
+- Transform AI-generated content to human-like patterns
+- Adversarial stylometry transformer
+- Bypass AI detection filters
+- Automatic word replacement and comment transformation
+
+### 🔗 Pre-Commit Framework
+- Automatic AI-pattern detection before commits
+- Auto-fixing of detected issues
+- Configurable stealth checks
+- Cross-platform support
+
 ## 🚀 Installation
+
+### Easy Install (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/John-Varghese-EH/PhantomDev.git
+cd PhantomDev
+
+# Run easy install
+cargo run -- easy-install
+
+# Or install IDE skills for specific IDE
+cargo run -- easy-install --ide claude
+cargo run -- easy-install --ide cursor
+cargo run -- easy-install --ide windsurf
+cargo run -- easy-install --ide antigravity
+```
 
 ### From Source
 
@@ -60,7 +91,7 @@ cargo build --release
 cargo install --path .
 ```
 
-### One-Click Installer (Coming Soon)
+### One-Click Installer
 
 ```bash
 curl -sSL https://phantomdev.io/install.sh | bash
@@ -137,6 +168,35 @@ cp hooks/commit-msg .git/hooks/
 chmod +x .git/hooks/pre-commit .git/hooks/commit-msg
 ```
 
+### Undercover Mode
+
+```bash
+# Transform commit message
+phantomdev undercover --message "feat: Implement comprehensive user authentication"
+
+# Transform code comments
+phantomdev undercover --comments
+
+# Transform variable names
+phantomdev undercover --variables
+
+# Transform everything
+phantomdev undercover --comments --variables
+```
+
+### Pre-Commit Framework
+
+```bash
+# Install pre-commit framework
+pip install pre-commit
+
+# Initialize hooks
+pre-commit install
+
+# Run hooks manually
+pre-commit run --all-files
+```
+
 ## ⚙️ Configuration
 
 PhantomDev uses a TOML configuration file located at `.phantomdev/config.toml`:
@@ -171,10 +231,13 @@ phantomdev/
 │   ├── detector/      # AI detection engine
 │   ├── humanizer/     # Code transformation
 │   ├── jitter/        # Temporal obfuscation
+│   ├── undercover/    # Adversarial stylometry transformer
 │   ├── cli/           # Main CLI binary
 │   └── tui/           # Terminal UI dashboard
-├── rules/             # IDE rules (Cursor, Claude, etc.)
+├── rules/             # IDE rules (Cursor, Claude, Windsurf, Antigravity, etc)
+├── skills/            # IDE skills for agent frameworks
 ├── hooks/             # Git hooks
+├── scripts/           # Pre-commit and utility scripts
 └── models/            # Local model storage
 ```
 
@@ -195,6 +258,7 @@ cargo test -p phantomdev-core
 cargo test -p phantomdev-detector
 cargo test -p phantomdev-humanizer
 cargo test -p phantomdev-jitter
+cargo test -p phantomdev-undercover
 cargo test -p phantomdev-tui
 ```
 
@@ -258,6 +322,13 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 - GitHub Issues: [https://github.com/John-Varghese-EH/PhantomDev/issues](https://github.com/John-Varghese-EH/PhantomDev/issues)
 - Discord: [https://discord.gg/phantomdev](https://discord.gg/phantomdev)
+
+## 👨‍💻 Author
+
+Built with ❤️ by [John Varghese (J0X)](https://github.com/John-Varghese-EH)
+
+- GitHub: [John-Varghese-EH](https://github.com/John-Varghese-EH)
+- LinkedIn: [John Varghese](https://linkedin.com/in/John--Varghese)
 
 ---
 

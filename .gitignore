@@ -11,14 +11,15 @@ Cargo.lock
 
 # --- AI AGENTS & ASSISTANTS (INTERNAL) ---
 # Ignore all agent-specific configurations, cache, and state
-.gemini/
-.antigravity/
-.cursor/
-.copilot/
-.aider*
-.clinerules
-.cline/
-.roo/
+#.gemini/
+#.antigravity/
+#.cursor/
+#.copilot/
+#.aider*
+#.clinerules
+#.cline/
+#.roo/
+CLAUDE.md
 
 # Agent runtime artifacts
 **/.system_generated/
@@ -91,4 +92,3 @@ coverage/
 env/
 venv/
 node_modules/
-CLAUDE.md

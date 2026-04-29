@@ -9,12 +9,15 @@ use phantomdev_core::{CodeBlock, Config, Detector, Humanizer, Language};
 use phantomdev_detector::PhantomDetector;
 use phantomdev_humanizer::PhantomHumanizer;
 use phantomdev_jitter::PhantomJitter;
+use phantomdev_undercover::UndercoverEngine;
 use phantomdev_tui::PhantomTui;
 use std::path::PathBuf;
 
 /// PhantomDev - The Adversarial Stylometry Framework for the AI-Augmented Developer
 #[derive(Parser)]
 #[command(name = "phantomdev")]
+#[command(author = "John Varghese (J0X) <john@phantomdev.io>")]
+#[command(version = "0.1.0")]
 #[command(about = "Inject human entropy back into your workflow", long_about = None)]
 struct Cli {
     #[command(subcommand)]
@@ -28,6 +31,18 @@ enum Commands {
         /// Force reinitialization
         #[arg(short, long)]
         force: bool,
+    },
+    /// Easy install PhantomDev (recommended for new users)
+    EasyInstall {
+        /// IDE to install skills for
+        #[arg(short, long)]
+        ide: Option<String>,
+    },
+    /// Install IDE skills/rules for AI assistants
+    InstallSkills {
+        /// IDE to install for (claude, cursor, windsurf, antigravity, all)
+        #[arg(short, long)]
+        ide: String,
     },
     /// Scan current changes for AI-generated content
     Scan {
@@ -43,6 +58,21 @@ enum Commands {
         /// Files to humanize
         #[arg(short, long)]
         files: Vec<String>,
+        /// Entropy level (0.0 - 1.0)
+        #[arg(short, long)]
+        entropy: Option<f32>,
+    },
+    /// Undercover mode - transform AI-generated content to human-like patterns
+    Undercover {
+        /// Transform commit message
+        #[arg(short, long)]
+        message: Option<String>,
+        /// Transform code comments
+        #[arg(short, long)]
+        comments: bool,
+        /// Transform variable names
+        #[arg(short, long)]
+        variables: bool,
         /// Entropy level (0.0 - 1.0)
         #[arg(short, long)]
         entropy: Option<f32>,
@@ -79,8 +109,11 @@ fn main() -> Result<()> {
 
     match cli.command {
         Commands::Init { force } => cmd_init(force),
+        Commands::EasyInstall { ide } => cmd_easy_install(ide),
+        Commands::InstallSkills { ide } => cmd_install_skills(ide),
         Commands::Scan { files, verbose } => cmd_scan(files, verbose),
         Commands::Humanize { files, entropy } => cmd_humanize(files, entropy),
+        Commands::Undercover { message, comments, variables, entropy } => cmd_undercover(message, comments, variables, entropy),
         Commands::Score { detailed } => cmd_score(detailed),
         Commands::Dashboard => cmd_dashboard(),
         Commands::Config { show, reset } => cmd_config(show, reset),
@@ -114,6 +147,117 @@ fn cmd_init(force: bool) -> Result<()> {
     println!("Next steps:");
     println!("  Run {} to scan your changes", "phantomdev scan".cyan());
     println!("  Run {} to see your stealth score", "phantomdev score".cyan());
+    println!("  Run {} for easy IDE setup", "phantomdev easy-install".cyan());
+
+    Ok(())
+}
+
+/// Easy install PhantomDev
+fn cmd_easy_install(ide: Option<String>) -> Result<()> {
+    println!("{}", "🚀 PhantomDev Easy Install".cyan());
+    println!();
+
+    // Initialize PhantomDev
+    cmd_init(true)?;
+
+    // Install git hooks
+    println!("{}", "Installing git hooks...".cyan());
+    let hooks_dir = PathBuf::from("hooks");
+    let git_hooks_dir = PathBuf::from(".git/hooks");
+
+    if hooks_dir.exists() {
+        for hook in ["pre-commit", "commit-msg"] {
+            let src = hooks_dir.join(hook);
+            let dst = git_hooks_dir.join(hook);
+            if src.exists() {
+                std::fs::copy(&src, &dst)?;
+                #[cfg(unix)]
+                {
+                    use std::os::unix::fs::PermissionsExt;
+                    let mut perms = std::fs::metadata(&dst)?.permissions();
+                    perms.set_mode(0o755);
+                    std::fs::set_permissions(&dst, perms)?;
+                }
+                println!("  ✓ Installed {}", hook);
+            }
+        }
+    }
+
+    // Install IDE skills if specified
+    if let Some(ide_name) = ide {
+        println!();
+        println!("{}", "Installing IDE skills...".cyan());
+        cmd_install_skills(ide_name)?;
+    } else {
+        println!();
+        println!("To install IDE skills, run:");
+        println!("  phantomdev install-skills --ide claude");
+        println!("  phantomdev install-skills --ide cursor");
+        println!("  phantomdev install-skills --ide windsurf");
+        println!("  phantomdev install-skills --ide antigravity");
+        println!("  phantomdev install-skills --ide all");
+    }
+
+    println!();
+    println!("{}", "✓ Easy install complete!".green());
+    println!();
+    println!("Quick start:");
+    println!("  phantomdev scan          # Scan for AI-generated content");
+    println!("  phantomdev humanize      # Humanize code");
+    println!("  phantomdev score         # Check stealth score");
+    println!("  phantomdev dashboard     # Launch TUI dashboard");
+
+    Ok(())
+}
+
+/// Install IDE skills
+fn cmd_install_skills(ide: String) -> Result<()> {
+    let skills_dir = PathBuf::from("skills");
+
+    let ides = if ide.to_lowercase() == "all" {
+        vec!["claude", "cursor", "windsurf", "antigravity"]
+    } else {
+        vec![ide.to_lowercase().as_str()]
+    };
+
+    for ide_name in ides {
+        let skill_file = match ide_name {
+            "claude" => "claude-code.md",
+            "cursor" => "cursor.md",
+            "windsurf" => "windsurf.md",
+            "antigravity" => "antigravity.md",
+            _ => {
+                println!("⚠️  Unknown IDE: {}", ide_name);
+                continue;
+            }
+        };
+
+        let src = skills_dir.join(skill_file);
+        if !src.exists() {
+            println!("⚠️  Skill file not found: {}", skill_file);
+            continue;
+        }
+
+        let content = std::fs::read_to_string(&src)?;
+
+        // Determine destination based on IDE
+        let dst = match ide_name {
+            "claude" => PathBuf::from(".claude/skills/phantomdev.md"),
+            "cursor" => PathBuf::from(".cursor/rules/phantomdev.md"),
+            "windsurf" => PathBuf::from(".windsurf/rules/phantomdev.md"),
+            "antigravity" => PathBuf::from(".antigravity/rules/phantomdev.md"),
+            _ => continue,
+        };
+
+        // Create destination directory
+        if let Some(parent) = dst.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
+
+        // Write skill file
+        std::fs::write(&dst, content)?;
+        println!("  ✓ Installed {} skill", ide_name);
+    }
 
     Ok(())
 }
@@ -196,6 +340,81 @@ fn cmd_humanize(files: Vec<String>, entropy: Option<f32>) -> Result<()> {
     }
 
     println!("{}", "✓ Humanization complete!".green());
+
+    Ok(())
+}
+
+/// Undercover mode - transform AI-generated content to human-like patterns
+fn cmd_undercover(message: Option<String>, comments: bool, variables: bool, entropy: Option<f32>) -> Result<()> {
+    println!("{}", "🕵️ PhantomDev Undercover Mode".cyan());
+    println!();
+
+    let engine = UndercoverEngine::new();
+
+    // Transform commit message if provided
+    if let Some(msg) = message {
+        println!("Original: {}", msg.dimmed());
+        let transformed = engine.transform_commit_message(&msg);
+        println!("Transformed: {}", transformed.green());
+        println!();
+    }
+
+    // Transform code if requested
+    if comments || variables {
+        let files = get_staged_files()?;
+
+        if files.is_empty() {
+            println!("{}", "No staged files. Stage some files first.".yellow());
+            return Ok(());
+        }
+
+        println!("Transforming {} file(s)...", files.len());
+
+        for file_path in files {
+            if let Some(code) = read_code_block(&file_path)? {
+                let mut transformed = code.content.clone();
+
+                if comments {
+                    transformed = engine.transform_comments(&transformed);
+                }
+
+                if variables {
+                    transformed = engine.transform_variable_names(&transformed);
+                }
+
+                // Write transformed content
+                std::fs::write(&file_path, transformed)?;
+                println!("  ✓ {}", file_path.display());
+
+                // Stage the file
+                std::process::Command::new("git")
+                    .args(["add", file_path.to_str().unwrap()])
+                    .output()?;
+            }
+        }
+
+        println!();
+        println!("{}", "✓ Undercover transformation complete!".green());
+    }
+
+    // Check for banned words in all staged files
+    let files = get_staged_files()?;
+    let mut total_banned = 0;
+
+    for file_path in files {
+        if let Some(code) = read_code_block(&file_path)? {
+            let banned = engine.find_banned_words(&code.content);
+            if !banned.is_empty() {
+                println!("⚠️  {} contains banned words: {}", file_path.display(), banned.join(", ").dimmed());
+                total_banned += banned.len();
+            }
+        }
+    }
+
+    if total_banned > 0 {
+        println!();
+        println!("💡 Run 'phantomdev humanize' to fix banned words");
+    }
 
     Ok(())
 }

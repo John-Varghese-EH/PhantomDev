@@ -2,6 +2,10 @@
 //!
 //! This crate provides the foundational types, traits, and configuration
 //! for the PhantomDev adversarial stylometry framework.
+//!
+//! Built with ❤️ by John Varghese (J0X)
+//! GitHub: https://github.com/John-Varghese-EH
+//! LinkedIn: https://linkedin.com/in/John--Varghese
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;

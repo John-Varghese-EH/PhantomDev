@@ -15,6 +15,7 @@ phantomdev-core = { path = "../core" }
 phantomdev-detector = { path = "../detector" }
 phantomdev-humanizer = { path = "../humanizer" }
 phantomdev-jitter = { path = "../jitter" }
+phantomdev-undercover = { path = "../undercover" }
 phantomdev-tui = { path = "../tui" }
 
 tokio.workspace = true

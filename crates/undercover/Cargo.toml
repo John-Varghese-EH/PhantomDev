@@ -1,0 +1,23 @@
+[package]
+name = "phantomdev-undercover"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+phantomdev-core = { path = "../core" }
+
+tokio.workspace = true
+serde.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+regex.workspace = true
+rand.workspace = true
+
+# Async HTTP for API calls
+reqwest.workspace = true
+
+# OpenAI API
+async-openai.workspace = true

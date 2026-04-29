@@ -2,6 +2,10 @@
 //!
 //! This crate provides a terminal user interface for visualizing
 //! stealth scores, detection results, and style profiles.
+//!
+//! Built with ❤️ by John Varghese (J0X)
+//! GitHub: https://github.com/John-Varghese-EH
+//! LinkedIn: https://linkedin.com/in/John--Varghese
 
 use anyhow::Result;
 use ratatui::{

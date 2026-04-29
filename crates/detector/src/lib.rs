@@ -2,6 +2,10 @@
 //!
 //! This crate provides AI detection capabilities using local models
 //! and cloud API fallbacks.
+//!
+//! Built with ❤️ by John Varghese (J0X)
+//! GitHub: https://github.com/John-Varghese-EH
+//! LinkedIn: https://linkedin.com/in/John--Varghese
 
 use phantomdev_core::{CodeBlock, DetectionResult, Detector, Pattern, PatternType, StealthScore};
 use std::sync::Arc;

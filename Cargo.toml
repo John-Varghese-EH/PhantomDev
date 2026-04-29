@@ -5,6 +5,7 @@ members = [
     "crates/detector",
     "crates/humanizer",
     "crates/jitter",
+    "crates/undercover",
     "crates/cli",
     "crates/tui",
 ]
@@ -49,6 +50,9 @@ crossterm = "0.27"
 
 # Text processing
 regex = "1.10"
+
+# Randomness
+rand = "0.8"
 
 # Language parsers
 syn = { version = "2.0", features = ["full", "parsing", "visit"] }

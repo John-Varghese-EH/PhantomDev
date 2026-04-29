@@ -1,0 +1,43 @@
+---
+description: Applies stealth patterns to code comments and commit messages to bypass AI detectors.
+alwaysApply: true
+---
+
+# PhantomDev Undercover Mode
+
+When writing comments or commit messages:
+
+## Stylistic Rules
+
+1. **Sentence Fragmentation**: Use brief, 2-5 word phrases
+2. **Grammar Degradation**: Use lowercase for commit messages, no terminal periods
+3. **Banned Words**: Never use "leveraging," "comprehensive," "robust," "ensure," "enhanced"
+4. **Variable Naming**: Prefer `auth_tk` over `userAuthenticationToken`
+
+## Comment Style
+
+- Focus on "Why" not "What"
+- Use `//` instead of `/** */` for internal logic
+- Add occasional "todo" or "fixme" for workarounds
+- Keep comments brief and practical
+
+## Commit Messages
+
+- Keep to 5-7 words max
+- Focus on the 'what' not the 'how'
+- Use lowercase for casual commits
+- Example: "fixed login lag" instead of "Implemented robust authentication"
+
+## Word Replacements
+
+- authentication → auth
+- information → info
+- utility → utils
+- configuration → config
+- implementation → impl
+
+---
+
+Built with ❤️ by John Varghese (J0X)
+GitHub: https://github.com/John-Varghese-EH
+LinkedIn: https://linkedin.com/in/John--Varghese

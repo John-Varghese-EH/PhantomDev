@@ -5,5 +5,15 @@
 /home/j0x/Documents/GitHub/PhantomDev/crates/jitter/src/lib.rs
 /home/j0x/Documents/GitHub/PhantomDev/crates/cli/src/main.rs
 /home/j0x/Documents/GitHub/PhantomDev/crates/tui/src/lib.rs
-/home/j0x/Documents/GitHub/PhantomDev/README.md
+/home/j0x/Documents/GitHub/PhantomDev/crates/undercover/src/lib.rs
+/home/j0x/Documents/GitHub/PhantomDev/scripts/stealth_check.py
+/home/j0x/Documents/GitHub/PhantomDev/scripts/auto_humanize.py
+/home/j0x/Documents/GitHub/PhantomDev/scripts/check_commit_entropy.py
+/home/j0x/Documents/GitHub/PhantomDev/scripts/naming_check.py
 /home/j0x/Documents/GitHub/PhantomDev/CLAUDE.md
+/home/j0x/Documents/GitHub/PhantomDev/CODE_OF_CONDUCT.md
+/home/j0x/Documents/GitHub/PhantomDev/SECURITY.md
+/home/j0x/Documents/GitHub/PhantomDev/CHANGELOG.md
+/home/j0x/Documents/GitHub/PhantomDev/CONTRIBUTING.md
+/home/j0x/Documents/GitHub/PhantomDev/SKILL.md
+/home/j0x/Documents/GitHub/PhantomDev/README.md
