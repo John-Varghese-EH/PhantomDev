@@ -25,7 +25,7 @@ use crossterm::{
 };
 use std::io;
 use std::time::Duration;
-use phantomdev_core::{StealthScore, DetectionResult, Pattern};
+use phantomdev_core::{StealthScore, DetectionResult};
 
 /// Main TUI application
 pub struct PhantomTui {
@@ -292,7 +292,7 @@ impl PhantomTui {
             .block(Block::default().borders(Borders::ALL).title("Pattern Detection"))
             .bar_width(8)
             .bar_gap(2)
-            .bar_set(&bars)
+            .data(&bars)
             .style(Style::default().fg(Color::Cyan))
             .value_style(Style::default().fg(Color::White).add_modifier(Modifier::BOLD));
 
