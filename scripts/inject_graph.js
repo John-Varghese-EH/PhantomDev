@@ -84,8 +84,6 @@ for (const file of targetPaths) {
   if (fs.existsSync(file)) {
     let html = fs.readFileSync(file, 'utf8');
     if (!html.includes('id="sidebar" { display: none')) {
-      // Find the existing network.once stabilization callback and remove it, then inject ours
-      html = html.replace(/network\.once\('stabilizationIterationsDone', \(\) => \{[\s\S]*?\}\);/, '');
       html = html.replace('</body>', injectedScript + '\n</body>');
       fs.writeFileSync(file, html);
       console.log('Successfully injected animation and styles into ' + file);

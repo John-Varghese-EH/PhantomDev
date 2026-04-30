@@ -113,7 +113,8 @@ const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
   edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
 });
 
-
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
 });
 
 
