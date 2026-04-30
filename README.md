@@ -16,7 +16,7 @@
 > Inject human entropy back into your workflow.
 
 [![Crates.io](https://img.shields.io/crates/v/phantomdev.svg)](https://crates.io/crates/phantomdev)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](LICENSE)
 [![Build](https://github.com/John-Varghese-EH/PhantomDev/actions/workflows/ci.yml/badge.svg)](https://github.com/John-Varghese-EH/PhantomDev/actions)
 [![GitHub Pages](https://img.shields.io/badge/docs-github--pages-blue.svg)](https://john-varghese-eh.github.io/PhantomDev/)
 
@@ -331,7 +331,12 @@ Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before
 
 ## License
 
-see [LICENSE](LICENSE).
+This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
+
+## Disclaimer
+
+**For Educational and Experimental Purposes Only.** 
+PhantomDev is provided "as is" to explore adversarial stylometry and help developers protect their coding signatures. It is not intended to bypass academic integrity systems, cheat in evaluations, or be used maliciously. The author (John Varghese) and contributors are not liable for any misuse of this tool or any consequences arising from its usage. Use responsibly.
 
 ## Changelog
 

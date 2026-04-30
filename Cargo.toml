@@ -11,10 +11,10 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["John Varghese (J0X) <johnvarghese.work@gmail.com>"]
-license = "MIT"
+license = "Apache-2.0"
 description = "A suite of tools for preserving coding signatures and humanizing AI agent outputs."
 repository = "https://github.com/John-Varghese-EH/PhantomDev"
 homepage = "https://john-varghese-eh.github.io/PhantomDev/"
