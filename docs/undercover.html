@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undercover Mode - PhantomDev Docs</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem; color: inherit;">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L2 10V22L16 30L30 22V10L16 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M16 6L6 12V20L16 26L26 20V12L16 6Z" fill="currentColor" opacity="0.3"/>
+                        <circle cx="16" cy="16" r="4" fill="currentColor"/>
+                    </svg>
+                    <span>PhantomDev</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#install">Install</a>
+                <a href="index.html#docs">Docs</a>
+                <a href="https://github.com/John-Varghese-EH/PhantomDev" class="nav-github">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="doc-header">
+        <div class="container">
+            <h1>Undercover Mode</h1>
+            <p>Advanced adversarial stylometry techniques to maintain your authorship.</p>
+        </div>
+    </header>
+
+    <main class="doc-content">
+        <div class="container">
+            <h2>What is Undercover Mode?</h2>
+            <p>Undercover Mode takes code humanization to the next level by specifically targeting structural fingerprints often left by Large Language Models. It actively modifies code syntax, comments, and commit messages to align perfectly with your past Git history.</p>
+            
+            <h2>Using Undercover</h2>
+            
+            <h3>Transform Commit Messages</h3>
+            <p>LLMs tend to write highly structured and predictable commit messages (e.g., using rigid Conventional Commits perfectly). Undercover mode breaks this rigidity:</p>
+            <pre><code>phantomdev undercover --message "feat: Implement comprehensive user authentication"</code></pre>
+            <p>This will rewrite the message into something more organically human based on your repository history.</p>
+
+            <h3>Rewrite Comments</h3>
+            <p>AI writes overly enthusiastic and descriptive comments. You can tone them down and rephrase them:</p>
+            <pre><code>phantomdev undercover --comments</code></pre>
+
+            <h3>Variable Name Substitution</h3>
+            <p>If you usually name your variables a certain way (e.g., <code>idx</code> instead of <code>index</code>), Undercover Mode will enforce it on AI-generated snippets:</p>
+            <pre><code>phantomdev undercover --variables</code></pre>
+
+            <h3>Combined Power</h3>
+            <p>You can execute multiple transformations simultaneously before staging your files:</p>
+            <pre><code>phantomdev undercover --comments --variables</code></pre>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 PhantomDev. Built with <span class="heart">♥</span> by John Varghese (J0X)</p>
+                <p>MIT License</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

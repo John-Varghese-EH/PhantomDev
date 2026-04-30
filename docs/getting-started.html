@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - PhantomDev Docs</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem; color: inherit;">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L2 10V22L16 30L30 22V10L16 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M16 6L6 12V20L16 26L26 20V12L16 6Z" fill="currentColor" opacity="0.3"/>
+                        <circle cx="16" cy="16" r="4" fill="currentColor"/>
+                    </svg>
+                    <span>PhantomDev</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#install">Install</a>
+                <a href="index.html#docs">Docs</a>
+                <a href="https://github.com/John-Varghese-EH/PhantomDev" class="nav-github">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="doc-header">
+        <div class="container">
+            <h1>Getting Started</h1>
+            <p>Your guide to setting up and using PhantomDev for the first time.</p>
+        </div>
+    </header>
+
+    <main class="doc-content">
+        <div class="container">
+            <h2>Installation</h2>
+            <p>PhantomDev provides several installation methods to get you up and running quickly.</p>
+            
+            <h3>Using Cargo</h3>
+            <p>Since PhantomDev is built in Rust, the easiest way to install the CLI is via crates.io:</p>
+            <pre><code>cargo install phantomdev</code></pre>
+            
+            <h3>Initialization</h3>
+            <p>Once installed, you can initialize PhantomDev in your local project repository:</p>
+            <pre><code>phantomdev init</code></pre>
+            <p>This command will create a <code>.phantomdev/</code> directory with default configurations that you can tweak according to your needs.</p>
+
+            <h2>Core Concepts</h2>
+            
+            <h3>Scanning for AI Patterns</h3>
+            <p>PhantomDev can analyze your code for patterns typical of AI-generated content (e.g., specific comment styles, excessive emojis, deterministic variable naming).</p>
+            <pre><code>phantomdev scan --verbose</code></pre>
+
+            <h3>Humanizing Code</h3>
+            <p>If your stealth score is low, use the humanizer to inject entropy into your code so it mimics human stylometry:</p>
+            <pre><code>phantomdev humanize --entropy 0.7</code></pre>
+            
+            <h3>Undercover Transformations</h3>
+            <p>Undercover mode can rewrite commit messages and comments on the fly:</p>
+            <pre><code>phantomdev undercover --message "feat: integrate auth endpoint"</code></pre>
+
+            <p>For more detailed configurations, check the <a href="configuration.html">Configuration Guide</a>.</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 PhantomDev. Built with <span class="heart">♥</span> by John Varghese (J0X)</p>
+                <p>MIT License</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

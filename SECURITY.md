@@ -13,7 +13,7 @@ If you discover a security vulnerability, please report it responsibly.
 ### How to Report
 
 1. **Do not** create a public issue
-2. Send an email to: security@phantomdev.io
+2. Send an email to: johnvarghese.work@gmail.com
 3. Include as much detail as possible:
    - Description of the vulnerability
    - Steps to reproduce
@@ -77,5 +77,5 @@ We follow responsible disclosure practices:
 ## Contact
 
 For security-related questions:
-- Email: security@phantomdev.io
+- Email: johnvarghese.work@gmail.com
 - GitHub Security: https://github.com/John-Varghese-EH/PhantomDev/security/advisories

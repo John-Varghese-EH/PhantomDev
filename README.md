@@ -108,7 +108,7 @@ cargo install --path crates/cli
 ### One-Click Installer
 
 ```bash
-curl -sSL https://phantomdev.io/install.sh | bash
+curl -sSL https://github.io/PhantomDev/install.sh | bash
 ```
 
 ---
@@ -284,19 +284,15 @@ cargo build --release --target aarch64-apple-darwin
 cargo build --release --target x86_64-pc-windows-msvc
 ```
 
-## Publishing to crates.io
+## Published on crates.io
 
-See [cargo-instruction.md](cargo-instruction.md) for the full publishing sequence.
+PhantomDev is officially published on crates.io. You can easily install the CLI using cargo:
 
 ```bash
-cargo publish -p phantomdev-core
-cargo publish -p phantomdev-detector
-cargo publish -p phantomdev-humanizer
-cargo publish -p phantomdev-jitter
-cargo publish -p phantomdev-undercover
-cargo publish -p phantomdev-tui
-cargo publish -p phantomdev
+cargo install phantomdev
 ```
+
+*(For detailed workspace publishing instructions, see [cargo-instruction.md](cargo-instruction.md))*
 
 ---
 

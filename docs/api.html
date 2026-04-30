@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - PhantomDev Docs</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem; color: inherit;">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L2 10V22L16 30L30 22V10L16 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M16 6L6 12V20L16 26L26 20V12L16 6Z" fill="currentColor" opacity="0.3"/>
+                        <circle cx="16" cy="16" r="4" fill="currentColor"/>
+                    </svg>
+                    <span>PhantomDev</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#install">Install</a>
+                <a href="index.html#docs">Docs</a>
+                <a href="https://github.com/John-Varghese-EH/PhantomDev" class="nav-github">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="doc-header">
+        <div class="container">
+            <h1>API Reference</h1>
+            <p>Complete guide to the PhantomDev core library.</p>
+        </div>
+    </header>
+
+    <main class="doc-content">
+        <div class="container">
+            <h2>Overview</h2>
+            <p>PhantomDev provides a modular architecture. While most users will interface through the CLI, developers can integrate the specific underlying engines into their own rust projects.</p>
+
+            <h2>Crate Structure</h2>
+            <ul>
+                <li><code>phantomdev-core</code>: Core types and traits.</li>
+                <li><code>phantomdev-detector</code>: AI stylometry detection engine.</li>
+                <li><code>phantomdev-humanizer</code>: Code humanization tools.</li>
+                <li><code>phantomdev-undercover</code>: Adversarial rewrite tools.</li>
+                <li><code>phantomdev-jitter</code>: Temporal obfuscation features.</li>
+                <li><code>phantomdev-tui</code>: The terminal UI dashboard implementation.</li>
+            </ul>
+
+            <h2>Integrating PhantomDev Detector</h2>
+            <pre><code>use phantomdev_detector::PhantomDetector;
+use phantomdev_core::{CodeBlock, Language};
+
+fn main() -> anyhow::Result&lt;()&gt; {
+    let detector = PhantomDetector::new()?;
+    let code = CodeBlock {
+        path: "src/main.rs".into(),
+        language: Language::Rust,
+        content: "fn main() { println!(\"Hello World\"); }".into(),
+        line_range: (1, 1),
+    };
+    
+    let result = detector.detect(&amp;code)?;
+    println!("AI Probability: {:.2}%", result.score.ai_probability * 100.0);
+    
+    Ok(())
+}</code></pre>
+
+            <h2>Integrating PhantomDev Humanizer</h2>
+            <pre><code>use phantomdev_humanizer::PhantomHumanizer;
+
+fn main() -> anyhow::Result&lt;()&gt; {
+    let humanizer = PhantomHumanizer::new();
+    let repo_path = std::env::current_dir()?;
+    
+    // Learn style profile from git history
+    let profile = humanizer.learn_style(&amp;repo_path)?;
+    
+    // Use it to humanize code
+    // let humanized_code = humanizer.humanize(&amp;code_block, &amp;profile)?;
+    
+    Ok(())
+}</code></pre>
+
+            <p>For extensive API documentation, you can run <code>cargo doc --open</code> in the repository root.</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 PhantomDev. Built with <span class="heart">♥</span> by John Varghese (J0X)</p>
+                <p>MIT License</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

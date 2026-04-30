@@ -15,7 +15,7 @@ use std::path::PathBuf;
 /// PhantomDev - The Adversarial Stylometry Framework for the AI-Augmented Developer
 #[derive(Parser)]
 #[command(name = "phantomdev")]
-#[command(author = "John Varghese (J0X) <john@phantomdev.io>")]
+#[command(author = "John Varghese (J0X) <johnvarghese.work@gmail.com>")]
 #[command(version = "0.1.0")]
 #[command(about = "Inject human entropy back into your workflow", long_about = None)]
 struct Cli {

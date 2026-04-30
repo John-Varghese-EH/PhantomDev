@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - PhantomDev Docs</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html"
+                    style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem; color: inherit;">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L2 10V22L16 30L30 22V10L16 2Z" stroke="currentColor" stroke-width="2"
+                            fill="none" />
+                        <path d="M16 6L6 12V20L16 26L26 20V12L16 6Z" fill="currentColor" opacity="0.3" />
+                        <circle cx="16" cy="16" r="4" fill="currentColor" />
+                    </svg>
+                    <span>PhantomDev</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#install">Install</a>
+                <a href="index.html#docs">Docs</a>
+                <a href="https://github.com/John-Varghese-EH/PhantomDev" class="nav-github">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="doc-header">
+        <div class="container">
+            <h1>Configuration</h1>
+            <p>Tailor PhantomDev to your personal coding stylometry.</p>
+        </div>
+    </header>
+
+    <main class="doc-content">
+        <div class="container">
+            <h2>The Config File</h2>
+            <p>When you run <code>phantomdev init</code>, a <code>.phantomdev/config.toml</code> file is generated. This
+                file dictates how strictly your AI code should be scrutinized and modified.</p>
+
+            <pre><code>[detection]
+threshold = 0.15              # AI probability threshold (0.0 - 1.0)
+use_local = true              # Prioritize local models
+use_cloud_fallback = true     # Fall back to cloud API if local score is uncertain
+
+[humanization]
+auto_humanize = false         # Run humanization automatically on commit
+entropy_level = 0.5           # Transformation intensity (0.0 - 1.0)
+
+[jitter]
+enabled = false               # Enable temporal obfuscation
+min_delay_secs = 60
+max_delay_secs = 300
+
+[api]
+openrouter_key = ""           # Optional: OpenRouter API key
+anthropic_key = ""            # Optional: Anthropic API key
+base_url = ""                 # Optional: Custom API base URL</code></pre>
+
+            <h2>Section Breakdown</h2>
+
+            <h3>Detection</h3>
+            <p>Controls the sensitivity of the AI fingerprint scanner. Setting the threshold lower makes PhantomDev more
+                paranoid about what constitutes "AI-like" code.</p>
+
+            <h3>Humanization</h3>
+            <p><strong>auto_humanize:</strong> If set to true, PhantomDev will automatically attempt to fix code styling
+                anomalies via Git hooks during commits.</p>
+            <p><strong>entropy_level:</strong> Higher values introduce more variations in variable renaming, comment
+                phrasing, and formatting.</p>
+
+            <h3>Jitter (Temporal Obfuscation)</h3>
+            <p>Jitter introduces artificial delays to simulate human coding cadences, defeating timing-based developer
+                analytics.</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 PhantomDev. Built with <span class="heart">♥</span> by John Varghese (J0X)</p>
+                <p>MIT License</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
