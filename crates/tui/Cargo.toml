@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+readme.workspace = true
 repository.workspace = true
 description.workspace = true
 keywords.workspace = true
@@ -11,7 +12,7 @@ categories.workspace = true
 homepage.workspace = true
 
 [dependencies]
-phantomdev-core = { path = "../core", version = "0.1.0" }
+phantomdev-core = { path = "../core", version = "0.1.2" }
 
 tokio = { workspace = true, features = ["full"] }
 serde.workspace = true

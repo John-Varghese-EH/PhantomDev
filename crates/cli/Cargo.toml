@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+readme.workspace = true
 repository.workspace = true
 description.workspace = true
 keywords.workspace = true
@@ -15,12 +16,12 @@ name = "phantomdev"
 path = "src/main.rs"
 
 [dependencies]
-phantomdev-core = { path = "../core", version = "0.1.0" }
-phantomdev-detector = { path = "../detector", version = "0.1.0" }
-phantomdev-humanizer = { path = "../humanizer", version = "0.1.0" }
-phantomdev-jitter = { path = "../jitter", version = "0.1.0" }
-phantomdev-undercover = { path = "../undercover", version = "0.1.0" }
-phantomdev-tui = { path = "../tui", version = "0.1.0" }
+phantomdev-core = { path = "../core", version = "0.1.2" }
+phantomdev-detector = { path = "../detector", version = "0.1.2" }
+phantomdev-humanizer = { path = "../humanizer", version = "0.1.2" }
+phantomdev-jitter = { path = "../jitter", version = "0.1.2" }
+phantomdev-undercover = { path = "../undercover", version = "0.1.2" }
+phantomdev-tui = { path = "../tui", version = "0.1.2" }
 
 tokio.workspace = true
 serde.workspace = true

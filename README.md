@@ -16,6 +16,7 @@
 > Inject human entropy back into your workflow.
 
 [![Crates.io](https://img.shields.io/crates/v/phantomdev.svg)](https://crates.io/crates/phantomdev)
+[![Docs.rs](https://docs.rs/phantomdev/badge.svg)](https://docs.rs/phantomdev)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](LICENSE)
 [![Build](https://github.com/John-Varghese-EH/PhantomDev/actions/workflows/ci.yml/badge.svg)](https://github.com/John-Varghese-EH/PhantomDev/actions)
 [![GitHub Pages](https://img.shields.io/badge/docs-github--pages-blue.svg)](https://john-varghese-eh.github.io/PhantomDev/)
