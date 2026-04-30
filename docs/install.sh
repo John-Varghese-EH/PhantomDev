@@ -44,7 +44,7 @@ show_help() {
 ${CYAN}PhantomDev Installer${NC}
 
 ${GREEN}Usage:${NC}
-    curl -sSL https://phantomdev.io/install.sh | bash
+    curl -sSL https://john-varghese-eh.github.io/PhantomDevinstall.sh | bash
     ./install.sh [options]
 
 ${GREEN}Options:${NC}
@@ -57,7 +57,7 @@ ${GREEN}Options:${NC}
 ${GREEN}Examples:${NC}
     ./install.sh --version 0.1.0
     ./install.sh --prefix /usr/local
-    curl -sSL https://phantomdev.io/install.sh | bash -s -- --version 0.1.0
+    curl -sSL https://john-varghese-eh.github.io/PhantomDevinstall.sh | bash -s -- --version 0.1.0
 
 ${GREEN}Environment Variables:${NC}
     PHANTOMDEV_VERSION     Override version
