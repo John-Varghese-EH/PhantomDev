@@ -8,8 +8,9 @@ const targetPaths = [
 
 const injectedScript = `
         <style>
-            #graph   { width: 100% !important; flex: 1 !important; }
-            body     { overflow: hidden !important; }
+            #graph   { width: 100% !important; flex: 1 !important; background: radial-gradient(circle at center, #131320 0%, #0a0a10 100%) !important; }
+            #graph canvas { filter: drop-shadow(0 0 12px rgba(99,102,241,0.12)); }
+            body     { overflow: hidden !important; margin: 0; background: #0a0a10; }
         </style>
         <script>
             // Expose on window so parent iframe can access
@@ -34,17 +35,17 @@ const injectedScript = `
                         return;
                     }
 
-                    const doOverview = (overviewCounter % 4 === 0);
+                    const doOverview = (overviewCounter % 5 === 0);
                     overviewCounter++;
 
                     if (doOverview) {
                         network.unselectAll();
                         network.moveTo({
-                            position: { x: rand(-80, 80), y: rand(-60, 60) },
-                            scale: rand(0.22, 0.32),
-                            animation: { duration: Math.round(rand(3000, 4200)), easingFunction: 'easeInOutCubic' }
+                            position: { x: rand(-100, 100), y: rand(-80, 80) },
+                            scale: rand(0.25, 0.35),
+                            animation: { duration: Math.round(rand(4000, 5000)), easingFunction: 'easeInOutQuart' }
                         });
-                        tourTimer = setTimeout(runTour, rand(4200, 5500));
+                        tourTimer = setTimeout(runTour, rand(5000, 6000));
                         return;
                     }
 
@@ -58,16 +59,27 @@ const injectedScript = `
                     network.unselectAll();
                     network.selectNodes([node.id]);
 
-                    const nodeScale = rand(1.4, 2.4);
-                    const travelTime = Math.round(rand(2800, 4000));
+                    const nodeScale = rand(1.6, 2.2);
+                    const travelTime = Math.round(rand(3500, 4800));
 
                     network.moveTo({
                         position: { x: pos.x, y: pos.y },
                         scale: nodeScale,
-                        animation: { duration: travelTime, easingFunction: 'easeInOutCubic' }
+                        animation: { duration: travelTime, easingFunction: 'easeInOutQuart' }
                     });
 
-                    const holdTime = rand(1000, 2000);
+                    const holdTime = Math.round(rand(2000, 3000));
+                    
+                    // Cinematic drift: slowly pan and zoom slightly while holding on the node
+                    setTimeout(() => {
+                        if (window.phantomPaused) return;
+                        network.moveTo({
+                            position: { x: pos.x + rand(-20, 20), y: pos.y + rand(-20, 20) },
+                            scale: nodeScale * rand(1.02, 1.08),
+                            animation: { duration: holdTime, easingFunction: 'linear' }
+                        });
+                    }, travelTime + 50);
+
                     tourTimer = setTimeout(runTour, travelTime + holdTime);
                 }
 
