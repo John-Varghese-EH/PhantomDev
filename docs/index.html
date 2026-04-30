@@ -372,8 +372,7 @@ cargo install --path crates/cli</code>
             <p>Interactive knowledge graph of the PhantomDev codebase</p>
         </div>
         <div class="graph-embed">
-            <iframe src="graph.html"
-                id="codebase-graph" title="PhantomDev Codebase Graph" scrolling="no" frameborder="0"
+            <iframe id="codebase-graph" title="PhantomDev Codebase Graph" scrolling="no" frameborder="0"
                 allowtransparency="true">
             </iframe>
             <div class="graph-overlay" id="graph-overlay">
@@ -503,25 +502,89 @@ cargo install --path crates/cli</code>
         const graphOverlay = document.getElementById('graph-overlay');
         const graphEmbed = document.querySelector('.graph-embed');
 
-        graphIframe.addEventListener('load', () => {
-            try {
-                const iWin = graphIframe.contentWindow;
-                const iDoc = graphIframe.contentDocument || iWin.document;
+        // The animation logic we want to inject into the pristine graph.html
+        const injectedScript = `
+        <style>
+            #sidebar { display: none !important; }
+            #graph   { width: 100% !important; flex: 1 !important; }
+            body     { overflow: hidden !important; }
+        </style>
+        <script>
+            // Expose on window so parent iframe can access
+            window.network = network;
 
-                // Hide sidebar so canvas fills full width
-                const style = iDoc.createElement('style');
-                style.textContent = `
-                    #sidebar { display: none !important; }
-                    #graph   { width: 100% !important; flex: 1 !important; }
-                    body     { overflow: hidden !important; }
-                `;
-                iDoc.head.appendChild(style);
+            network.once('stabilizationIterationsDone', () => {
+                network.setOptions({ physics: { enabled: false } });
+                window.networkReady = true;
 
-                // Animation is self-contained in graph.html - runs automatically
-                // after physics stabilizes (window.networkReady + startTour/stopTour API)
+                // ── Cinematic node-touring animation ─────────────────────────────────────
+                const hubNodes = RAW_NODES.slice().sort((a, b) => b.degree - a.degree).slice(0, 40);
 
-            } catch (e) { /* cross-origin - silently skip */ }
-        });
+                let tourStep = 0;
+                let tourTimer = null;
+                let overviewCounter = 0;
+
+                function rand(a, b) { return a + Math.random() * (b - a); }
+
+                function runTour() {
+                    if (window.phantomPaused) {
+                        tourTimer = setTimeout(runTour, 500);
+                        return;
+                    }
+
+                    const doOverview = (overviewCounter % 4 === 0);
+                    overviewCounter++;
+
+                    if (doOverview) {
+                        network.unselectAll();
+                        network.moveTo({
+                            position: { x: rand(-80, 80), y: rand(-60, 60) },
+                            scale: rand(0.22, 0.32),
+                            animation: { duration: Math.round(rand(3000, 4200)), easingFunction: 'easeInOutCubic' },
+                        });
+                        tourTimer = setTimeout(runTour, rand(4200, 5500));
+                        return;
+                    }
+
+                    const node = hubNodes[tourStep % hubNodes.length];
+                    tourStep++;
+
+                    const positions = network.getPositions([node.id]);
+                    const pos = positions[node.id];
+                    if (!pos) { tourTimer = setTimeout(runTour, 400); return; }
+
+                    network.unselectAll();
+                    network.selectNodes([node.id]);
+
+                    const nodeScale = rand(1.4, 2.4);
+                    const travelTime = Math.round(rand(2800, 4000));
+
+                    network.moveTo({
+                        position: { x: pos.x, y: pos.y },
+                        scale: nodeScale,
+                        animation: { duration: travelTime, easingFunction: 'easeInOutCubic' },
+                    });
+
+                    const holdTime = rand(1000, 2000);
+                    tourTimer = setTimeout(runTour, travelTime + holdTime);
+                }
+
+                tourTimer = setTimeout(runTour, 1200);
+
+                window.stopTour = () => { clearTimeout(tourTimer); network.unselectAll(); };
+                window.startTour = () => { tourTimer = setTimeout(runTour, 600); };
+            });
+        <\/script>
+        `;
+
+        fetch('graph.html')
+            .then(res => res.text())
+            .then(html => {
+                // Inject our script right before the closing body tag
+                const modifiedHtml = html.replace('</body>', injectedScript + '\n</body>');
+                graphIframe.srcdoc = modifiedHtml;
+            })
+            .catch(err => console.error('Failed to load graph.html:', err));
 
         function pauseGraphTour() {
             try {
