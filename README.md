@@ -114,90 +114,95 @@ curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash
 
 ---
 
+## Quick Start
+
+### Step 1: Install
+
+```bash
+curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash
+```
+
+### Step 2: Go to your project
+
+```bash
+cd your-project
+```
+
+### Step 3: Check your code
+
+```bash
+phantomdev
+```
+
+This will show your stealth score and suggest what to do next.
+
+### Step 4: Fix AI patterns
+
+```bash
+phantomdev fix
+```
+
+That's it! Your code is now humanized.
+
+---
+
 ## Usage
 
-### Initialize a Project
+PhantomDev is designed to be simple. Just run `phantomdev` and it will guide you.
+
+### Basic Commands
 
 ```bash
-phantomdev init
+phantomdev              # Check status and get suggestions
+phantomdev fix          # Auto-fix AI patterns in staged files
+phantomdev scan         # See what's detected
+phantomdev score         # Check your stealth score
+phantomdev dashboard    # Launch visual dashboard
+phantomdev config       # View or change settings
+phantomdev install      # Install IDE integration
 ```
 
-Creates a `.phantomdev/` directory with a default configuration file.
+### Typical Workflow
 
-### Scan for AI Patterns
+1. **Stage your files**
+   ```bash
+   git add your-files
+   ```
 
-```bash
-# Scan staged files
-phantomdev scan
+2. **Check what's detected**
+   ```bash
+   phantomdev scan
+   ```
 
-# Scan specific files
-phantomdev scan --files src/main.rs src/lib.rs
+3. **Fix AI patterns**
+   ```bash
+   phantomdev fix
+   ```
 
-# Verbose output with per-pattern breakdown
-phantomdev scan --verbose
-```
+4. **Commit**
+   ```bash
+   git commit -m "your message"
+   ```
 
-### Humanize Code
-
-```bash
-# Humanize staged files
-phantomdev humanize
-
-# Target specific files
-phantomdev humanize --files src/main.rs
-
-# Control entropy level (0.0 = minimal changes, 1.0 = aggressive)
-phantomdev humanize --entropy 0.7
-```
-
-### Stealth Score
+### Advanced Options
 
 ```bash
-phantomdev score
+# Fix specific files
+phantomdev fix --files src/main.rs
+
+# See what would change without applying
+phantomdev fix --dry-run
+
+# Detailed score breakdown
 phantomdev score --detailed
-```
 
-### TUI Dashboard
-
-```bash
-phantomdev dashboard
-```
-
-### Configuration
-
-```bash
-phantomdev config --show
+# Reset settings to defaults
 phantomdev config --reset
+
+# Install IDE integration
+phantomdev install --ide claude
+phantomdev install --ide all
 ```
-
-### Git Hooks
-
-```bash
-cp hooks/pre-commit .git/hooks/
-cp hooks/commit-msg .git/hooks/
-chmod +x .git/hooks/pre-commit .git/hooks/commit-msg
-```
-
-### Undercover Mode
-
-```bash
-# Rewrite a commit message
-phantomdev undercover --message "feat: Implement comprehensive user authentication"
-
-# Rewrite in-file comments
-phantomdev undercover --comments
-
-# Rename variables to match personal style
-phantomdev undercover --variables
-
-# Apply all transformations
-phantomdev undercover --comments --variables
-```
-
-### Pre-Commit Framework
-
-```bash
-pip install pre-commit
 pre-commit install
 pre-commit run --all-files
 ```

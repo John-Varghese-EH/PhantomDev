@@ -1,6 +1,6 @@
-//! PhantomDev CLI
+//! PhantomDev CLI - Simplified UX
 //!
-//! The main command-line interface for PhantomDev.
+//! A conversational, easy-to-use CLI for PhantomDev.
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
@@ -11,214 +11,371 @@ use phantomdev_humanizer::PhantomHumanizer;
 use phantomdev_undercover::UndercoverEngine;
 use phantomdev_tui::PhantomTui;
 use std::path::PathBuf;
+use std::io::{self, Write};
 
-/// PhantomDev - The Adversarial Stylometry Framework for the AI-Augmented Developer
+/// PhantomDev - Make your AI code look human
 #[derive(Parser)]
 #[command(name = "phantomdev")]
-#[command(author = "John Varghese (J0X) <johnvarghese.work@gmail.com>")]
+#[command(author = "John Varghese (J0X)")]
 #[command(version = "0.1.0")]
-#[command(about = "Inject human entropy back into your workflow", long_about = None)]
+#[command(about = "Make your AI-generated code look human-written", long_about = None)]
+#[command(after_help = "
+Quick Start:
+  phantomdev              # Check status and get suggestions
+  phantomdev fix          # Auto-fix AI patterns in staged files
+  phantomdev scan         # See what's detected
+  phantomdev dashboard    # Launch visual dashboard
+
+Learn more: https://john-varghese-eh.github.io/PhantomDev/
+")]
 struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    command: Option<Commands>,
 }
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Initialize PhantomDev in the current repository
-    Init {
-        /// Force reinitialization
+    /// Fix AI patterns in your code (recommended)
+    Fix {
+        /// Files to fix (default: staged files)
         #[arg(short, long)]
-        force: bool,
-    },
-    /// Easy install PhantomDev (recommended for new users)
-    EasyInstall {
-        /// IDE to install skills for
+        files: Vec<String>,
+        /// Show what would be changed without applying
         #[arg(short, long)]
-        ide: Option<String>,
+        dry_run: bool,
     },
-    /// Install IDE skills/rules for AI assistants
-    InstallSkills {
-        /// IDE to install for (claude, cursor, windsurf, antigravity, all)
-        #[arg(short, long)]
-        ide: String,
-    },
-    /// Scan current changes for AI-generated content
+    /// Scan for AI-generated content
     Scan {
-        /// Specific files to scan
+        /// Files to scan (default: staged files)
         #[arg(short, long)]
         files: Vec<String>,
-        /// Show detailed output
-        #[arg(short, long)]
-        verbose: bool,
     },
-    /// Humanize code to match repository style
-    Humanize {
-        /// Files to humanize
-        #[arg(short, long)]
-        files: Vec<String>,
-        /// Entropy level (0.0 - 1.0)
-        #[arg(short, long)]
-        entropy: Option<f32>,
-    },
-    /// Undercover mode - transform AI-generated content to human-like patterns
-    Undercover {
-        /// Transform commit message
-        #[arg(short, long)]
-        message: Option<String>,
-        /// Transform code comments
-        #[arg(short, long)]
-        comments: bool,
-        /// Transform variable names
-        #[arg(short, long)]
-        variables: bool,
-        /// Entropy level (0.0 - 1.0)
-        #[arg(short, long)]
-        entropy: Option<f32>,
-    },
-    /// Show stealth score for current changes
+    /// Check your stealth score
     Score {
         /// Show detailed breakdown
         #[arg(short, long)]
         detailed: bool,
     },
-    /// Launch TUI dashboard
+    /// Launch visual dashboard
     Dashboard,
-    /// Configure PhantomDev
+    /// Configure settings
     Config {
-        /// Show current configuration
+        /// Show current settings
         #[arg(short, long)]
         show: bool,
-        /// Reset to default configuration
+        /// Reset to defaults
         #[arg(short, long)]
         reset: bool,
+    },
+    /// Initialize in current directory
+    Init {
+        /// Force reinitialize
+        #[arg(short, long)]
+        force: bool,
+    },
+    /// Install IDE integration
+    Install {
+        /// IDE to install for (claude, cursor, windsurf, antigravity, all)
+        #[arg(short = 'i', long)]
+        ide: Option<String>,
     },
 }
 
 fn main() -> Result<()> {
-    // Initialize tracing
-    tracing_subscriber::fmt()
-        .with_env_filter(
-            tracing_subscriber::EnvFilter::from_default_env()
-                .add_directive(tracing::Level::INFO.into()),
-        )
-        .init();
-
     let cli = Cli::parse();
 
-    match cli.command {
-        Commands::Init { force } => cmd_init(force),
-        Commands::EasyInstall { ide } => cmd_easy_install(ide),
-        Commands::InstallSkills { ide } => cmd_install_skills(ide),
-        Commands::Scan { files, verbose } => cmd_scan(files, verbose),
-        Commands::Humanize { files, entropy } => cmd_humanize(files, entropy),
-        Commands::Undercover { message, comments, variables, entropy } => cmd_undercover(message, comments, variables, entropy),
+    // If no command, show interactive status
+    let command = cli.command.unwrap_or(Commands::Score { detailed: false });
+
+    match command {
+        Commands::Fix { files, dry_run } => cmd_fix(files, dry_run),
+        Commands::Scan { files } => cmd_scan(files),
         Commands::Score { detailed } => cmd_score(detailed),
         Commands::Dashboard => cmd_dashboard(),
         Commands::Config { show, reset } => cmd_config(show, reset),
+        Commands::Init { force } => cmd_init(force),
+        Commands::Install { ide } => cmd_install(ide),
     }
 }
 
-/// Initialize PhantomDev in the current repository
-fn cmd_init(force: bool) -> Result<()> {
-    println!("{}", "Initializing PhantomDev...".cyan());
+/// Fix AI patterns in your code
+fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
+    ensure_initialized()?;
 
-    let config_path = PathBuf::from(".phantomdev/config.toml");
-    if config_path.exists() && !force {
-        println!("{}", "PhantomDev is already initialized. Use --force to reinitialize.".yellow());
+    println!("{}", "🔍 Scanning for AI patterns...".cyan());
+    println!();
+
+    let detector = PhantomDetector::new()?;
+    let files_to_fix = if files.is_empty() {
+        get_staged_files()?
+    } else {
+        files.into_iter().map(PathBuf::from).collect()
+    };
+
+    if files_to_fix.is_empty() {
+        println!("{}", "ℹ️  No files to fix. Stage some files first.".dimmed());
+        println!();
+        println!("Try: {}", "git add <files>".cyan());
         return Ok(());
     }
 
-    // Create config directory
-    std::fs::create_dir_all(".phantomdev")?;
+    let mut issues_found = 0;
+    let mut files_with_issues = Vec::new();
 
-    // Create default configuration
-    let config = Config::default();
-    config.save(&config_path)?;
+    for file_path in &files_to_fix {
+        if let Some(code) = read_code_block(file_path)? {
+            let result = detector.detect(&code)?;
 
-    // Create .gitignore for .phantomdev
-    let gitignore_path = PathBuf::from(".phantomdev/.gitignore");
-    std::fs::write(gitignore_path, "*\n")?;
-
-    println!("{}", "✓ PhantomDev initialized successfully!".green());
-    println!("  Configuration: {}", config_path.display().to_string().dimmed());
-    println!();
-    println!("Next steps:");
-    println!("  Run {} to scan your changes", "phantomdev scan".cyan());
-    println!("  Run {} to see your stealth score", "phantomdev score".cyan());
-    println!("  Run {} for easy IDE setup", "phantomdev easy-install".cyan());
-
-    Ok(())
-}
-
-/// Easy install PhantomDev
-fn cmd_easy_install(ide: Option<String>) -> Result<()> {
-    println!("{}", "🚀 PhantomDev Easy Install".cyan());
-    println!();
-
-    // Initialize PhantomDev
-    cmd_init(true)?;
-
-    // Install git hooks
-    println!("{}", "Installing git hooks...".cyan());
-    let hooks_dir = PathBuf::from("hooks");
-    let git_hooks_dir = PathBuf::from(".git/hooks");
-
-    if hooks_dir.exists() {
-        for hook in ["pre-commit", "commit-msg"] {
-            let src = hooks_dir.join(hook);
-            let dst = git_hooks_dir.join(hook);
-            if src.exists() {
-                std::fs::copy(&src, &dst)?;
-                #[cfg(unix)]
-                {
-                    use std::os::unix::fs::PermissionsExt;
-                    let mut perms = std::fs::metadata(&dst)?.permissions();
-                    perms.set_mode(0o755);
-                    std::fs::set_permissions(&dst, perms)?;
-                }
-                println!("  ✓ Installed {}", hook);
+            if result.score.is_likely_ai(0.15) {
+                issues_found += 1;
+                files_with_issues.push((file_path.clone(), result));
+                println!("  ⚠️  {} - {:.0}% AI detected", file_path.display(), result.score.ai_probability * 100.0);
+            } else {
+                println!("  ✓ {} - Looks good", file_path.display());
             }
         }
     }
 
-    // Install IDE skills if specified
-    if let Some(ide_name) = ide {
+    println!();
+
+    if issues_found == 0 {
+        println!("{}", "✨ Your code looks great! No AI patterns detected.".green());
+        return Ok(());
+    }
+
+    if dry_run {
+        println!("{}", "📋 Dry run - showing what would be fixed:".yellow());
+        for (path, result) in &files_with_issues {
+            println!("  • {} - {:.0}% AI", path.display(), result.score.ai_probability * 100.0);
+        }
         println!();
-        println!("{}", "Installing IDE skills...".cyan());
-        cmd_install_skills(ide_name)?;
-    } else {
-        println!();
-        println!("To install IDE skills, run:");
-        println!("  phantomdev install-skills --ide claude");
-        println!("  phantomdev install-skills --ide cursor");
-        println!("  phantomdev install-skills --ide windsurf");
-        println!("  phantomdev install-skills --ide antigravity");
-        println!("  phantomdev install-skills --ide all");
+        println!("Run {} to apply fixes", "phantomdev fix".cyan());
+        return Ok(());
+    }
+
+    println!("{}", "🔧 Fixing {} file(s)...".cyan(), issues_found);
+
+    let humanizer = PhantomHumanizer::new();
+    let repo_path = std::env::current_dir()?;
+    let profile = humanizer.learn_style(&repo_path)?;
+
+    let mut fixed_count = 0;
+    for (file_path, _) in &files_with_issues {
+        if let Some(code) = read_code_block(file_path)? {
+            let humanized = humanizer.humanize(&code, &profile)?;
+            std::fs::write(file_path, humanized)?;
+            println!("  ✓ {}", file_path.display());
+            fixed_count += 1;
+
+            // Re-stage the file
+            let _ = std::process::Command::new("git")
+                .args(["add", file_path.to_str().unwrap()])
+                .output();
+        }
     }
 
     println!();
-    println!("{}", "✓ Easy install complete!".green());
+    println!("{}", "✨ Fixed {} file(s)!".green(), fixed_count);
     println!();
-    println!("Quick start:");
-    println!("  phantomdev scan          # Scan for AI-generated content");
-    println!("  phantomdev humanize      # Humanize code");
-    println!("  phantomdev score         # Check stealth score");
-    println!("  phantomdev dashboard     # Launch TUI dashboard");
+    println!("Next: {}", "git commit".cyan());
+}
 
+/// Scan for AI-generated content
+fn cmd_scan(files: Vec<String>) -> Result<()> {
+    ensure_initialized()?;
+
+    println!("{}", "🔍 Scanning for AI patterns...".cyan());
+    println!();
+
+    let detector = PhantomDetector::new()?;
+    let files_to_scan = if files.is_empty() {
+        get_staged_files()?
+    } else {
+        files.into_iter().map(PathBuf::from).collect()
+    };
+
+    if files_to_scan.is_empty() {
+        println!("{}", "ℹ️  No files to scan. Stage some files first.".dimmed());
+        println!();
+        println!("Try: {}", "git add <files>".cyan());
+        return Ok(());
+    }
+
+    let mut ai_count = 0;
+
+    for file_path in &files_to_scan {
+        if let Some(code) = read_code_block(file_path)? {
+            let result = detector.detect(&code)?;
+
+            if result.score.is_likely_ai(0.15) {
+                ai_count += 1;
+                println!("  ⚠️  {} - {:.0}% AI", file_path.display(), result.score.ai_probability * 100.0);
+            } else {
+                println!("  ✓ {} - Looks human", file_path.display());
+            }
+        }
+    }
+
+    println!();
+
+    if ai_count > 0 {
+        println!("Found AI patterns in {} file(s).", ai_count);
+        println!("Run {} to fix them", "phantomdev fix".cyan());
+    } else {
+        println!("{}", "✨ No AI patterns detected!".green());
+    }
+}
+
+/// Check stealth score
+fn cmd_score(detailed: bool) -> Result<()> {
+    ensure_initialized()?;
+
+    println!("{}", "📊 Checking stealth score...".cyan());
+    println!();
+
+    let detector = PhantomDetector::new()?;
+    let files = get_staged_files()?;
+
+    if files.is_empty() {
+        println!("{}", "ℹ️  No staged files. Stage some files first.".dimmed());
+        println!();
+        println!("Try: {}", "git add <files>".cyan());
+        return Ok(());
+    }
+
+    let mut total_score = 0.0;
+    let mut file_count = 0;
+
+    for file_path in &files {
+        if let Some(code) = read_code_block(file_path)? {
+            let result = detector.detect(&code)?;
+            total_score += result.score.overall;
+            file_count += 1;
+
+            if detailed {
+                let status = if result.score.is_likely_ai(0.15) {
+                    "⚠️".red()
+                } else {
+                    "✓".green()
+                };
+                println!("  {} {} - {:.0}%", status, file_path.display(), result.score.overall * 100.0);
+            }
+        }
+    }
+
+    if file_count > 0 {
+        let avg_score = total_score / file_count as f32;
+        let stealth_score = 1.0 - avg_score; // Invert: higher = more stealthy
+        let score_display = format!("{:.0}%", stealth_score * 100.0);
+
+        println!();
+        println!("Stealth Score: {}", score_display.bold());
+
+        let (emoji, status, color) = if stealth_score > 0.85 {
+            ("✨", "EXCELLENT", "green")
+        } else if stealth_score > 0.70 {
+            ("👍", "GOOD", "yellow")
+        } else {
+            ("⚠️", "NEEDS WORK", "red")
+        };
+
+        println!("{} Status: {}", emoji, status.color(color));
+
+        if stealth_score < 0.85 {
+            println!();
+            println!("Run {} to improve your score", "phantomdev fix".cyan());
+        }
+    }
+}
+
+/// Launch dashboard
+fn cmd_dashboard() -> Result<()> {
+    println!("{}", "🚀 Launching dashboard...".cyan());
+    let mut tui = PhantomTui::new();
+    tui.run()?;
     Ok(())
 }
 
-/// Install IDE skills
-fn cmd_install_skills(ide: String) -> Result<()> {
+/// Configure settings
+fn cmd_config(show: bool, reset: bool) -> Result<()> {
+    let config_path = PathBuf::from(".phantomdev/config.toml");
+
+    if reset {
+        let config = Config::default();
+        config.save(&config_path)?;
+        println!("{}", "✓ Settings reset to defaults".green());
+        return Ok(());
+    }
+
+    let config = Config::load_or_default(&config_path)?;
+
+    println!("{}", "Current Settings:".cyan());
+    println!("  Detection threshold: {:.0}%", config.detection.threshold * 100.0);
+    println!("  Auto-humanize: {}", config.humanization.auto_humanize);
+    println!("  Entropy level: {:.0}%", config.humanization.entropy_level * 100.0);
+}
+
+/// Initialize
+fn cmd_init(force: bool) -> Result<()> {
+    let config_path = PathBuf::from(".phantomdev/config.toml");
+
+    if config_path.exists() && !force {
+        println!("{}", "✓ Already initialized".green());
+        return Ok(());
+    }
+
+    std::fs::create_dir_all(".phantomdev")?;
+    let config = Config::default();
+    config.save(&config_path)?;
+
+    println!("{}", "✓ Initialized!".green());
+    println!();
+    println!("Ready to go! Run {} to check your code", "phantomdev".cyan());
+}
+
+/// Install IDE integration
+fn cmd_install(ide: Option<String>) -> Result<()> {
     let skills_dir = PathBuf::from("skills");
 
-    let ide_lower = ide.to_lowercase();
+    if !skills_dir.exists() {
+        println!("{}", "⚠️  Skills directory not found. Are you in the PhantomDev repository?".yellow());
+        return Ok(());
+    }
+
+    let ide_name = ide.unwrap_or_else(|| {
+        // Interactive selection
+        println!("{}", "Select IDE to install:".cyan());
+        println!("  1) Claude Code");
+        println!("  2) Cursor");
+        println!("  3) Windsurf");
+        println!("  4) Antigravity");
+        println!("  5) All");
+        print!("Enter choice (1-5): ");
+        io::stdout().flush()?;
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input)?;
+
+        match input.trim() {
+            "1" => "claude",
+            "2" => "cursor",
+            "3" => "windsurf",
+            "4" => "antigravity",
+            "5" => "all",
+            _ => "all",
+        }
+        .to_string()
+    });
+
+    let ide_lower = ide_name.to_lowercase();
     let ides: Vec<&str> = if ide_lower == "all" {
         vec!["claude", "cursor", "windsurf", "antigravity"]
     } else {
         vec![ide_lower.as_str()]
     };
+
+    println!();
+    println!("{}", "Installing IDE integration...".cyan());
 
     for ide_name in ides {
         let skill_file = match ide_name {
@@ -227,14 +384,14 @@ fn cmd_install_skills(ide: String) -> Result<()> {
             "windsurf" => "windsurf.md",
             "antigravity" => "antigravity.md",
             _ => {
-                println!("⚠️  Unknown IDE: {}", ide_name);
+                println!("  ⚠️  Unknown IDE: {}", ide_name);
                 continue;
             }
         };
 
         let src = skills_dir.join(skill_file);
         if !src.exists() {
-            println!("⚠️  Skill file not found: {}", skill_file);
+            println!("  ⚠️  Skill file not found: {}", skill_file);
             continue;
         }
 
@@ -256,256 +413,29 @@ fn cmd_install_skills(ide: String) -> Result<()> {
 
         // Write skill file
         std::fs::write(&dst, content)?;
-        println!("  ✓ Installed {} skill", ide_name);
+        println!("  ✓ Installed {} integration", ide_name);
     }
 
-    Ok(())
-}
-
-/// Scan current changes for AI-generated content
-fn cmd_scan(files: Vec<String>, verbose: bool) -> Result<()> {
-    println!("{}", "Scanning for AI-generated content...".cyan());
-
-    let detector = PhantomDetector::new()?;
-
-    let files_to_scan = if files.is_empty() {
-        // Get staged files from git
-        get_staged_files()?
-    } else {
-        files.into_iter().map(PathBuf::from).collect()
-    };
-
-    if files_to_scan.is_empty() {
-        println!("{}", "No files to scan. Stage some files first.".yellow());
-        return Ok(());
-    }
-
-    println!("Scanning {} file(s)...", files_to_scan.len());
-
-    for file_path in files_to_scan {
-        if let Some(code) = read_code_block(&file_path)? {
-            let result = detector.detect(&code)?;
-
-            let status = if result.score.is_likely_ai(0.15) {
-                "⚠️  AI DETECTED".red()
-            } else {
-                "✓ HUMAN-LIKE".green()
-            };
-
-            println!("  {} {} - {}", status, file_path.display(), format!("{:.1}%", result.score.ai_probability * 100.0).dimmed());
-
-            if verbose {
-                for pattern in &result.patterns {
-                    println!("    - {:?} ({:.1}%)", pattern.pattern_type, pattern.confidence * 100.0);
-                }
-            }
-        }
-    }
-
-    Ok(())
-}
-
-/// Humanize code to match repository style
-fn cmd_humanize(files: Vec<String>, _entropy: Option<f32>) -> Result<()> {
-    println!("{}", "Humanizing code...".cyan());
-
-    let humanizer = PhantomHumanizer::new();
-    let repo_path = std::env::current_dir()?;
-    let profile = humanizer.learn_style(&repo_path)?;
-
-    println!("Learned style profile:");
-    println!("  Naming: {:?}", profile.naming_convention);
-    println!("  Comments: {:?}", profile.comment_style);
-    println!("  Indentation: {:?}", profile.indentation);
-
-    let files_to_humanize = if files.is_empty() {
-        get_staged_files()?
-    } else {
-        files.into_iter().map(PathBuf::from).collect()
-    };
-
-    if files_to_humanize.is_empty() {
-        println!("{}", "No files to humanize. Stage some files first.".yellow());
-        return Ok(());
-    }
-
-    println!("Humanizing {} file(s)...", files_to_humanize.len());
-
-    for file_path in files_to_humanize {
-        if let Some(code) = read_code_block(&file_path)? {
-            let _humanized = humanizer.humanize(&code, &profile)?;
-            println!("  ✓ {}", file_path.display());
-            // TODO: Write humanized content back to file
-        }
-    }
-
-    println!("{}", "✓ Humanization complete!".green());
-
-    Ok(())
-}
-
-/// Undercover mode - transform AI-generated content to human-like patterns
-fn cmd_undercover(message: Option<String>, comments: bool, variables: bool, _entropy: Option<f32>) -> Result<()> {
-    println!("{}", "🕵️ PhantomDev Undercover Mode".cyan());
     println!();
-
-    let engine = UndercoverEngine::new();
-
-    // Transform commit message if provided
-    if let Some(msg) = message {
-        println!("Original: {}", msg.dimmed());
-        let transformed = engine.transform_commit_message(&msg);
-        println!("Transformed: {}", transformed.green());
-        println!();
-    }
-
-    // Transform code if requested
-    if comments || variables {
-        let files = get_staged_files()?;
-
-        if files.is_empty() {
-            println!("{}", "No staged files. Stage some files first.".yellow());
-            return Ok(());
-        }
-
-        println!("Transforming {} file(s)...", files.len());
-
-        for file_path in files {
-            if let Some(code) = read_code_block(&file_path)? {
-                let mut transformed = code.content.clone();
-
-                if comments {
-                    transformed = engine.transform_comments(&transformed);
-                }
-
-                if variables {
-                    transformed = engine.transform_variable_names(&transformed);
-                }
-
-                // Write transformed content
-                std::fs::write(&file_path, transformed)?;
-                println!("  ✓ {}", file_path.display());
-
-                // Stage the file
-                std::process::Command::new("git")
-                    .args(["add", file_path.to_str().unwrap()])
-                    .output()?;
-            }
-        }
-
-        println!();
-        println!("{}", "✓ Undercover transformation complete!".green());
-    }
-
-    // Check for banned words in all staged files
-    let files = get_staged_files()?;
-    let mut total_banned = 0;
-
-    for file_path in files {
-        if let Some(code) = read_code_block(&file_path)? {
-            let banned = engine.find_banned_words(&code.content);
-            if !banned.is_empty() {
-                println!("⚠️  {} contains banned words: {}", file_path.display(), banned.join(", ").dimmed());
-                total_banned += banned.len();
-            }
-        }
-    }
-
-    if total_banned > 0 {
-        println!();
-        println!("💡 Run 'phantomdev humanize' to fix banned words");
-    }
+    println!("{}", "✓ Installation complete!".green());
+    println!();
+    println!("Restart your IDE to apply changes.");
 
     Ok(())
 }
 
-/// Show stealth score for current changes
-fn cmd_score(detailed: bool) -> Result<()> {
-    println!("{}", "Calculating stealth score...".cyan());
-
-    let detector = PhantomDetector::new()?;
-    let files = get_staged_files()?;
-
-    if files.is_empty() {
-        println!("{}", "No staged files. Stage some files first.".yellow());
-        return Ok(());
-    }
-
-    let mut total_score = 0.0;
-    let mut file_count = 0;
-
-    for file_path in files {
-        if let Some(code) = read_code_block(&file_path)? {
-            let result = detector.detect(&code)?;
-            total_score += result.score.overall;
-            file_count += 1;
-
-            if detailed {
-                println!("  {} - {:.1}%", file_path.display(), result.score.overall * 100.0);
-            }
-        }
-    }
-
-    if file_count > 0 {
-        let avg_score = total_score / file_count as f32;
-        let score_display = format!("{:.1}%", avg_score * 100.0);
-
-        println!();
-        println!("Overall Stealth Score: {}", score_display.bold());
-
-        let status = if avg_score > 0.85 {
-            "✓ EXCELLENT".green()
-        } else if avg_score > 0.70 {
-            "⚠️  GOOD".yellow()
-        } else {
-            "✗ NEEDS IMPROVEMENT".red()
-        };
-
-        println!("Status: {}", status);
-    }
-
-    Ok(())
-}
-
-/// Launch TUI dashboard
-fn cmd_dashboard() -> Result<()> {
-    println!("{}", "Launching PhantomDev Dashboard...".cyan());
-
-    let mut tui = PhantomTui::new();
-    tui.run()?;
-
-    Ok(())
-}
-
-/// Configure PhantomDev
-fn cmd_config(show: bool, reset: bool) -> Result<()> {
+/// Ensure PhantomDev is initialized
+fn ensure_initialized() -> Result<()> {
     let config_path = PathBuf::from(".phantomdev/config.toml");
-
-    if reset {
-        let config = Config::default();
-        config.save(&config_path)?;
-        println!("{}", "✓ Configuration reset to defaults".green());
-        return Ok(());
+    if !config_path.exists() {
+        println!("{}", "📝 Setting up PhantomDev...".dimmed());
+        cmd_init(false)?;
+        println!();
     }
-
-    if show || !config_path.exists() {
-        let config = Config::load_or_default(&config_path)?;
-        println!("Current Configuration:");
-        println!("  Detection threshold: {:.0}%", config.detection.threshold * 100.0);
-        println!("  Use local models: {}", config.detection.use_local);
-        println!("  Use cloud fallback: {}", config.detection.use_cloud_fallback);
-        println!("  Auto-humanize: {}", config.humanization.auto_humanize);
-        println!("  Entropy level: {:.0}%", config.humanization.entropy_level * 100.0);
-        println!("  Jitter enabled: {}", config.jitter.enabled);
-    } else {
-        println!("Use --show to view current configuration");
-        println!("Use --reset to reset to defaults");
-    }
-
     Ok(())
 }
 
-/// Get staged files from git
+/// Get staged files
 fn get_staged_files() -> Result<Vec<PathBuf>> {
     let output = std::process::Command::new("git")
         .args(["diff", "--cached", "--name-only"])
@@ -523,7 +453,7 @@ fn get_staged_files() -> Result<Vec<PathBuf>> {
     }
 }
 
-/// Read a code block from a file
+/// Read code from file
 fn read_code_block(path: &PathBuf) -> Result<Option<CodeBlock>> {
     if !path.exists() {
         return Ok(None);
@@ -536,13 +466,8 @@ fn read_code_block(path: &PathBuf) -> Result<Option<CodeBlock>> {
         .unwrap_or("");
 
     let language = Language::from_extension(extension);
-
     let lines: Vec<&str> = content.lines().collect();
-    let line_range = if lines.is_empty() {
-        (1, 1)
-    } else {
-        (1, lines.len())
-    };
+    let line_range = if lines.is_empty() { (1, 1) } else { (1, lines.len()) };
 
     Ok(Some(CodeBlock {
         path: path.clone(),

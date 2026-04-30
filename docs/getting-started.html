@@ -114,23 +114,9 @@ cargo install --path crates/cli</code>
                     <section id="quick-start" class="docs-section">
                         <h2>Quick Start</h2>
 
-                        <h3>1. Initialize Your Project</h3>
-                        <p>Navigate to your project directory and run:</p>
+                        <h3>Step 1: Go to your project</h3>
                         <div class="code-block">
-                            <code>phantomdev init</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <p>This creates a <code>.phantomdev/</code> directory with a default configuration file.</p>
-
-                        <h3>2. Scan for AI Patterns</h3>
-                        <p>Scan your staged files for AI-generated content:</p>
-                        <div class="code-block">
-                            <code>phantomdev scan</code>
+                            <code>cd your-project</code>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -139,10 +125,9 @@ cargo install --path crates/cli</code>
                             </button>
                         </div>
 
-                        <h3>3. Humanize Your Code</h3>
-                        <p>Apply human-like transformations to your code:</p>
+                        <h3>Step 2: Stage your files</h3>
                         <div class="code-block">
-                            <code>phantomdev humanize</code>
+                            <code>git add your-files</code>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -151,10 +136,9 @@ cargo install --path crates/cli</code>
                             </button>
                         </div>
 
-                        <h3>4. Check Your Stealth Score</h3>
-                        <p>See how well your code blends in:</p>
+                        <h3>Step 3: Check your code</h3>
                         <div class="code-block">
-                            <code>phantomdev score</code>
+                            <code>phantomdev</code>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -162,6 +146,19 @@ cargo install --path crates/cli</code>
                                 </svg>
                             </button>
                         </div>
+                        <p>This will show your stealth score and suggest what to do next.</p>
+
+                        <h3>Step 4: Fix AI patterns</h3>
+                        <div class="code-block">
+                            <code>phantomdev fix</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p>That's it! Your code is now humanized.</p>
                     </section>
 
                     <section id="basic-commands" class="docs-section">
@@ -169,52 +166,126 @@ cargo install --path crates/cli</code>
 
                         <div class="command-list">
                             <div class="command-item">
-                                <h4>phantomdev init</h4>
-                                <p>Initialize PhantomDev in the current directory. Creates configuration files and sets up the project structure.</p>
+                                <h4>phantomdev</h4>
+                                <p>Check status and get suggestions. This is the default command - just run <code>phantomdev</code> to see your stealth score.</p>
                             </div>
 
                             <div class="command-item">
-                                <h4>phantomdev scan [options]</h4>
-                                <p>Scan files for AI-generated patterns.</p>
-                                <ul>
-                                    <li><code>--files <path></code> - Scan specific files</li>
-                                    <li><code>--verbose</code> - Show detailed output</li>
-                                    <li><code>--staged</code> - Scan only staged files (default)</li>
-                                </ul>
+                                <h4>phantomdev fix</h4>
+                                <p>Auto-fix AI patterns in staged files. This is the main command you'll use to humanize your code.</p>
                             </div>
 
                             <div class="command-item">
-                                <h4>phantomdev humanize [options]</h4>
-                                <p>Apply human-like transformations to code.</p>
-                                <ul>
-                                    <li><code>--files <path></code> - Humanize specific files</li>
-                                    <li><code>--entropy <0.0-1.0></code> - Set transformation intensity</li>
-                                    <li><code>--dry-run</code> - Preview changes without applying</li>
-                                </ul>
+                                <h4>phantomdev scan</h4>
+                                <p>See what AI patterns are detected in your files without making changes.</p>
                             </div>
 
                             <div class="command-item">
-                                <h4>phantomdev score [options]</h4>
-                                <p>Show stealth score for your code.</p>
-                                <ul>
-                                    <li><code>--detailed</code> - Show per-file breakdown</li>
-                                    <li><code>--files <path></code> - Score specific files</li>
-                                </ul>
+                                <h4>phantomdev score</h4>
+                                <p>Check your stealth score with detailed breakdown of detected patterns.</p>
                             </div>
 
                             <div class="command-item">
                                 <h4>phantomdev dashboard</h4>
-                                <p>Launch the terminal UI dashboard for real-time monitoring.</p>
+                                <p>Launch the visual TUI dashboard for real-time monitoring.</p>
                             </div>
 
                             <div class="command-item">
-                                <h4>phantomdev config [options]</h4>
-                                <p>Manage PhantomDev configuration.</p>
-                                <ul>
-                                    <li><code>--show</code> - Display current configuration</li>
-                                    <li><code>--reset</code> - Reset to defaults</li>
-                                    <li><code>--edit</code> - Open config file in editor</li>
-                                </ul>
+                                <h4>phantomdev config</h4>
+                                <p>View or change PhantomDev settings.</p>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>phantomdev install</h4>
+                                <p>Install IDE integration for Claude Code, Cursor, Windsurf, or Antigravity.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="typical-workflow" class="docs-section">
+                        <h2>Typical Workflow</h2>
+
+                        <div class="workflow-steps">
+                            <div class="workflow-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Stage your files</h4>
+                                    <div class="code-block">
+                                        <code>git add your-files</code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="workflow-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Check what's detected</h4>
+                                    <div class="code-block">
+                                        <code>phantomdev scan</code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="workflow-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Fix AI patterns</h4>
+                                    <div class="code-block">
+                                        <code>phantomdev fix</code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="workflow-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Commit</h4>
+                                    <div class="code-block">
+                                        <code>git commit -m "your message"</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="advanced-options" class="docs-section">
+                        <h2>Advanced Options</h2>
+
+                        <div class="command-list">
+                            <div class="command-item">
+                                <h4>Fix specific files</h4>
+                                <div class="code-block">
+                                    <code>phantomdev fix --files src/main.rs</code>
+                                </div>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>See what would change without applying</h4>
+                                <div class="code-block">
+                                    <code>phantomdev fix --dry-run</code>
+                                </div>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>Detailed score breakdown</h4>
+                                <div class="code-block">
+                                    <code>phantomdev score --detailed</code>
+                                </div>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>Reset settings to defaults</h4>
+                                <div class="code-block">
+                                    <code>phantomdev config --reset</code>
+                                </div>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>Install IDE integration</h4>
+                                <div class="code-block">
+                                    <code>phantomdev install --ide claude
+phantomdev install --ide all</code>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -263,7 +334,6 @@ cargo install --path crates/cli</code>
             });
         }
 
-        // Active section highlighting
         const sections = document.querySelectorAll('.docs-section[id]');
         const navLinks = document.querySelectorAll('.docs-sidebar a');
 
