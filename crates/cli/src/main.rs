@@ -8,7 +8,6 @@ use colored::Colorize;
 use phantomdev_core::{CodeBlock, Config, Detector, Humanizer, Language};
 use phantomdev_detector::PhantomDetector;
 use phantomdev_humanizer::PhantomHumanizer;
-use phantomdev_undercover::UndercoverEngine;
 use phantomdev_tui::PhantomTui;
 use std::path::PathBuf;
 use std::io::{self, Write};
@@ -113,9 +112,10 @@ fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
     };
 
     if files_to_fix.is_empty() {
-        println!("{}", "ℹ️  No files to fix. Stage some files first.".dimmed());
+        println!("{}", "ℹ️  No files to fix.".yellow());
         println!();
-        println!("Try: {}", "git add <files>".cyan());
+        println!("{}", "Stage some files first:".dimmed());
+        println!("  {}", "git add <files>".cyan());
         return Ok(());
     }
 
@@ -128,10 +128,10 @@ fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
 
             if result.score.is_likely_ai(0.15) {
                 issues_found += 1;
-                files_with_issues.push((file_path.clone(), result));
-                println!("  ⚠️  {} - {:.0}% AI detected", file_path.display(), result.score.ai_probability * 100.0);
+                files_with_issues.push((file_path.clone(), result.clone()));
+                println!("  {} {} - {:.0}% AI", "⚠️".red(), file_path.display(), result.score.ai_probability * 100.0);
             } else {
-                println!("  ✓ {} - Looks good", file_path.display());
+                println!("  {} {} - Looks good", "✓".green(), file_path.display());
             }
         }
     }
@@ -140,6 +140,8 @@ fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
 
     if issues_found == 0 {
         println!("{}", "✨ Your code looks great! No AI patterns detected.".green());
+        println!();
+        println!("{}", "You're all set to commit!".dimmed());
         return Ok(());
     }
 
@@ -153,7 +155,7 @@ fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
         return Ok(());
     }
 
-    println!("{}", "🔧 Fixing {} file(s)...".cyan(), issues_found);
+    println!("🔧 Fixing {} file(s)...", issues_found);
 
     let humanizer = PhantomHumanizer::new();
     let repo_path = std::env::current_dir()?;
@@ -164,7 +166,7 @@ fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
         if let Some(code) = read_code_block(file_path)? {
             let humanized = humanizer.humanize(&code, &profile)?;
             std::fs::write(file_path, humanized)?;
-            println!("  ✓ {}", file_path.display());
+            println!("  {} {}", "✓".green(), file_path.display());
             fixed_count += 1;
 
             // Re-stage the file
@@ -175,9 +177,12 @@ fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
     }
 
     println!();
-    println!("{}", "✨ Fixed {} file(s)!".green(), fixed_count);
+    println!("{} Fixed {} file(s)!", "✨".green(), fixed_count);
     println!();
-    println!("Next: {}", "git commit".cyan());
+    println!("{}", "Next step:".dimmed());
+    println!("  {}", "git commit -m \"your message\"".cyan());
+
+    Ok(())
 }
 
 /// Scan for AI-generated content
@@ -195,9 +200,10 @@ fn cmd_scan(files: Vec<String>) -> Result<()> {
     };
 
     if files_to_scan.is_empty() {
-        println!("{}", "ℹ️  No files to scan. Stage some files first.".dimmed());
+        println!("{}", "ℹ️  No files to scan.".yellow());
         println!();
-        println!("Try: {}", "git add <files>".cyan());
+        println!("{}", "Stage some files first:".dimmed());
+        println!("  {}", "git add <files>".cyan());
         return Ok(());
     }
 
@@ -209,9 +215,9 @@ fn cmd_scan(files: Vec<String>) -> Result<()> {
 
             if result.score.is_likely_ai(0.15) {
                 ai_count += 1;
-                println!("  ⚠️  {} - {:.0}% AI", file_path.display(), result.score.ai_probability * 100.0);
+                println!("  {} {} - {:.0}% AI", "⚠️".red(), file_path.display(), result.score.ai_probability * 100.0);
             } else {
-                println!("  ✓ {} - Looks human", file_path.display());
+                println!("  {} {} - Looks human", "✓".green(), file_path.display());
             }
         }
     }
@@ -220,10 +226,15 @@ fn cmd_scan(files: Vec<String>) -> Result<()> {
 
     if ai_count > 0 {
         println!("Found AI patterns in {} file(s).", ai_count);
+        println!();
         println!("Run {} to fix them", "phantomdev fix".cyan());
     } else {
         println!("{}", "✨ No AI patterns detected!".green());
+        println!();
+        println!("{}", "Your code looks human!".dimmed());
     }
+
+    Ok(())
 }
 
 /// Check stealth score
@@ -237,9 +248,10 @@ fn cmd_score(detailed: bool) -> Result<()> {
     let files = get_staged_files()?;
 
     if files.is_empty() {
-        println!("{}", "ℹ️  No staged files. Stage some files first.".dimmed());
+        println!("{}", "ℹ️  No staged files.".yellow());
         println!();
-        println!("Try: {}", "git add <files>".cyan());
+        println!("{}", "Stage some files first:".dimmed());
+        println!("  {}", "git add <files>".cyan());
         return Ok(());
     }
 
@@ -284,8 +296,13 @@ fn cmd_score(detailed: bool) -> Result<()> {
         if stealth_score < 0.85 {
             println!();
             println!("Run {} to improve your score", "phantomdev fix".cyan());
+        } else {
+            println!();
+            println!("{}", "Your code looks great!".dimmed());
         }
     }
+
+    Ok(())
 }
 
 /// Launch dashboard
@@ -309,10 +326,17 @@ fn cmd_config(show: bool, reset: bool) -> Result<()> {
 
     let config = Config::load_or_default(&config_path)?;
 
-    println!("{}", "Current Settings:".cyan());
-    println!("  Detection threshold: {:.0}%", config.detection.threshold * 100.0);
-    println!("  Auto-humanize: {}", config.humanization.auto_humanize);
-    println!("  Entropy level: {:.0}%", config.humanization.entropy_level * 100.0);
+    if show {
+        println!("{}", "Current Settings:".cyan());
+        println!("  Detection threshold: {:.0}%", config.detection.threshold * 100.0);
+        println!("  Auto-humanize: {}", config.humanization.auto_humanize);
+        println!("  Entropy level: {:.0}%", config.humanization.entropy_level * 100.0);
+    } else {
+        println!("{}", "Use --show to view current configuration".dimmed());
+        println!("{}", "Use --reset to reset to defaults".dimmed());
+    }
+
+    Ok(())
 }
 
 /// Initialize
@@ -321,6 +345,8 @@ fn cmd_init(force: bool) -> Result<()> {
 
     if config_path.exists() && !force {
         println!("{}", "✓ Already initialized".green());
+        println!();
+        println!("Run {} to check your code", "phantomdev".cyan());
         return Ok(());
     }
 
@@ -330,7 +356,9 @@ fn cmd_init(force: bool) -> Result<()> {
 
     println!("{}", "✓ Initialized!".green());
     println!();
-    println!("Ready to go! Run {} to check your code", "phantomdev".cyan());
+    println!("{}", "Ready to go! Run {} to check your code".cyan(), "phantomdev".bold());
+
+    Ok(())
 }
 
 /// Install IDE integration
@@ -338,7 +366,11 @@ fn cmd_install(ide: Option<String>) -> Result<()> {
     let skills_dir = PathBuf::from("skills");
 
     if !skills_dir.exists() {
-        println!("{}", "⚠️  Skills directory not found. Are you in the PhantomDev repository?".yellow());
+        println!("{}", "⚠️  Skills directory not found.".yellow());
+        println!();
+        println!("{}", "Are you in the PhantomDev repository?".dimmed());
+        println!("  cd PhantomDev");
+        println!("  phantomdev install");
         return Ok(());
     }
 
@@ -351,10 +383,10 @@ fn cmd_install(ide: Option<String>) -> Result<()> {
         println!("  4) Antigravity");
         println!("  5) All");
         print!("Enter choice (1-5): ");
-        io::stdout().flush()?;
 
+        let _ = io::stdout().flush();
         let mut input = String::new();
-        io::stdin().read_line(&mut input)?;
+        let _ = io::stdin().read_line(&mut input);
 
         match input.trim() {
             "1" => "claude",
@@ -413,13 +445,13 @@ fn cmd_install(ide: Option<String>) -> Result<()> {
 
         // Write skill file
         std::fs::write(&dst, content)?;
-        println!("  ✓ Installed {} integration", ide_name);
+        println!("  {} {}", "✓".green(), format!("Installed {} integration", ide_name));
     }
 
     println!();
     println!("{}", "✓ Installation complete!".green());
     println!();
-    println!("Restart your IDE to apply changes.");
+    println!("{}", "Restart your IDE to apply changes.".dimmed());
 
     Ok(())
 }

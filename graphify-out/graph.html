@@ -113,8 +113,87 @@ const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
   edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
 });
 
+// Expose on window so parent iframe can access
+window.network = network;
+
 network.once('stabilizationIterationsDone', () => {
   network.setOptions({ physics: { enabled: false } });
+  window.networkReady = true;
+
+  // ── Cinematic node-touring animation ─────────────────────────────────────
+  // Only runs while parent's overlay is active (isInteracting = false in parent)
+  // We check window.phantomPaused which the parent sets on interaction
+
+  // Sort nodes by degree — visit the interesting hub nodes first
+  const hubNodes = RAW_NODES
+    .slice()
+    .sort((a, b) => b.degree - a.degree)
+    .slice(0, 40); // top 40 hubs
+
+  let tourStep = 0;
+  let tourTimer = null;
+  let overviewCounter = 0;
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function runTour() {
+    if (window.phantomPaused) {
+      // Retry after a bit when paused
+      tourTimer = setTimeout(runTour, 500);
+      return;
+    }
+
+    // Every 4th step pull back to a cluster overview
+    const doOverview = (overviewCounter % 4 === 0);
+    overviewCounter++;
+
+    if (doOverview) {
+      // Wide shot: zoom out to see the whole graph, no selection
+      network.unselectAll();
+      network.moveTo({
+        position: { x: rand(-80, 80), y: rand(-60, 60) },
+        scale: rand(0.22, 0.32),
+        animation: { duration: Math.round(rand(3000, 4200)), easingFunction: 'easeInOutCubic' },
+      });
+      tourTimer = setTimeout(runTour, rand(4200, 5500));
+      return;
+    }
+
+    // Pick next hub node (cycle through, shuffled order)
+    const node = hubNodes[tourStep % hubNodes.length];
+    tourStep++;
+
+    // Get its current position in graph space
+    const positions = network.getPositions([node.id]);
+    const pos = positions[node.id];
+    if (!pos) { tourTimer = setTimeout(runTour, 400); return; }
+
+    // Deselect previous, select this node
+    network.unselectAll();
+    network.selectNodes([node.id]);
+
+    // Zoom close — scale 1.4 to 2.6 depending on node size
+    const nodeScale = rand(1.4, 2.4);
+    const travelTime = Math.round(rand(2800, 4000));
+
+    network.moveTo({
+      position: { x: pos.x, y: pos.y },
+      scale: nodeScale,
+      animation: { duration: travelTime, easingFunction: 'easeInOutCubic' },
+    });
+
+    // Hold on the node for a beat, then move on
+    const holdTime = rand(1000, 2000);
+    tourTimer = setTimeout(runTour, travelTime + holdTime);
+  }
+
+  // Start tour after a short initial pause
+  tourTimer = setTimeout(runTour, 1200);
+
+  // Parent sets window.phantomPaused = true on user interaction
+  window.stopTour = () => { clearTimeout(tourTimer); network.unselectAll(); };
+  window.startTour = () => { tourTimer = setTimeout(runTour, 600); };
+  // ─────────────────────────────────────────────────────────────────────────
 });
 
 function showInfo(nodeId) {

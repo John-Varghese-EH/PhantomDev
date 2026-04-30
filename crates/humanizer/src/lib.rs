@@ -8,9 +8,8 @@ use phantomdev_core::{
 };
 use std::path::PathBuf;
 use std::collections::HashMap;
-use rand::Rng;
 use regex::Regex;
-use git2::{Repository, DiffOptions, Diff};
+use git2::Repository;
 
 /// Main humanizer implementation
 pub struct PhantomHumanizer {

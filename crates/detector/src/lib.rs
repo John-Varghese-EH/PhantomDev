@@ -12,6 +12,7 @@ use std::sync::Arc;
 
 /// Main detector implementation
 pub struct PhantomDetector {
+    #[allow(dead_code)]
     config: DetectorConfig,
     local_model: Option<Arc<dyn LocalModel>>,
     cloud_client: Option<Arc<dyn CloudClient>>,
