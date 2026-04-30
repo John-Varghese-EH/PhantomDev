@@ -25,11 +25,15 @@ const injectedScript = `
 
                 let tourStep = 0;
                 let tourTimer = null;
+                let driftTimer = null;
                 let overviewCounter = 0;
 
                 function rand(a, b) { return a + Math.random() * (b - a); }
 
                 function runTour() {
+                    clearTimeout(tourTimer);
+                    clearTimeout(driftTimer);
+
                     if (window.phantomPaused) {
                         tourTimer = setTimeout(runTour, 500);
                         return;
@@ -71,7 +75,7 @@ const injectedScript = `
                     const holdTime = Math.round(rand(2000, 3000));
                     
                     // Cinematic drift: slowly pan and zoom slightly while holding on the node
-                    setTimeout(() => {
+                    driftTimer = setTimeout(() => {
                         if (window.phantomPaused) return;
                         network.moveTo({
                             position: { x: pos.x + rand(-20, 20), y: pos.y + rand(-20, 20) },
@@ -85,8 +89,16 @@ const injectedScript = `
 
                 tourTimer = setTimeout(runTour, 1200);
 
-                window.stopTour = () => { clearTimeout(tourTimer); network.unselectAll(); };
-                window.startTour = () => { tourTimer = setTimeout(runTour, 600); };
+                window.stopTour = () => { 
+                    clearTimeout(tourTimer); 
+                    clearTimeout(driftTimer); 
+                    network.unselectAll(); 
+                };
+                window.startTour = () => { 
+                    clearTimeout(tourTimer); 
+                    clearTimeout(driftTimer); 
+                    tourTimer = setTimeout(runTour, 600); 
+                };
             });
         </script>
 `;
