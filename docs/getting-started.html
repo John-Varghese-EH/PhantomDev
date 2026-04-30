@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Getting Started - PhantomDev Docs</title>
+    <title>Getting Started - PhantomDev</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -18,56 +20,224 @@
                         <circle cx="128" cy="136" r="80" stroke="#ffffff" stroke-opacity="0.03" stroke-width="2"/>
                         <path d="M128 64 L92 128 L164 128 Z" fill="#ffffff" fill-opacity="0.15"/>
                         <path d="M128 64 L56 192 L200 192 Z" stroke="#ffffff" stroke-width="16" stroke-linejoin="round"/>
-                        <path d="M92 128 L164 128" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+                        <path d="M92 128 L164 128" stroke="#ffffff" stroke-width="16" stroke-cap="round"/>
                     </svg>
                     <span>PhantomDev</span>
                 </a>
             </div>
             <div class="nav-links">
-                <a href="index.html#features">Features</a>
-                <a href="index.html#install">Install</a>
-                <a href="index.html#docs">Docs</a>
+                <a href="index.html">Home</a>
+                <a href="getting-started.html" class="active">Docs</a>
                 <a href="https://github.com/John-Varghese-EH/PhantomDev" class="nav-github">GitHub</a>
             </div>
         </div>
     </nav>
 
-    <header class="doc-header">
+    <main class="docs-main">
         <div class="container">
-            <h1>Getting Started</h1>
-            <p>Your guide to setting up and using PhantomDev for the first time.</p>
-        </div>
-    </header>
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <div class="sidebar-section">
+                        <h3>Getting Started</h3>
+                        <ul>
+                            <li><a href="#installation" class="active">Installation</a></li>
+                            <li><a href="#quick-start">Quick Start</a></li>
+                            <li><a href="#basic-commands">Basic Commands</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Core Features</h3>
+                        <ul>
+                            <li><a href="detection.html">AI Detection</a></li>
+                            <li><a href="humanization.html">Code Humanization</a></li>
+                            <li><a href="jitter.html">Temporal Obfuscation</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Advanced</h3>
+                        <ul>
+                            <li><a href="undercover.html">Undercover Mode</a></li>
+                            <li><a href="configuration.html">Configuration</a></li>
+                            <li><a href="api.html">API Reference</a></li>
+                        </ul>
+                    </div>
+                </aside>
 
-    <main class="doc-content">
-        <div class="container">
-            <h2>Installation</h2>
-            <p>PhantomDev provides several installation methods to get you up and running quickly.</p>
-            
-            <h3>Using Cargo</h3>
-            <p>Since PhantomDev is built in Rust, the easiest way to install the CLI is via crates.io:</p>
-            <pre><code>cargo install phantomdev</code></pre>
-            
-            <h3>Initialization</h3>
-            <p>Once installed, you can initialize PhantomDev in your local project repository:</p>
-            <pre><code>phantomdev init</code></pre>
-            <p>This command will create a <code>.phantomdev/</code> directory with default configurations that you can tweak according to your needs.</p>
+                <article class="docs-content">
+                    <h1>Getting Started</h1>
+                    <p class="docs-intro">Get up and running with PhantomDev in minutes.</p>
 
-            <h2>Core Concepts</h2>
-            
-            <h3>Scanning for AI Patterns</h3>
-            <p>PhantomDev can analyze your code for patterns typical of AI-generated content (e.g., specific comment styles, excessive emojis, deterministic variable naming).</p>
-            <pre><code>phantomdev scan --verbose</code></pre>
+                    <section id="installation" class="docs-section">
+                        <h2>Installation</h2>
 
-            <h3>Humanizing Code</h3>
-            <p>If your stealth score is low, use the humanizer to inject entropy into your code so it mimics human stylometry:</p>
-            <pre><code>phantomdev humanize --entropy 0.7</code></pre>
-            
-            <h3>Undercover Transformations</h3>
-            <p>Undercover mode can rewrite commit messages and comments on the fly:</p>
-            <pre><code>phantomdev undercover --message "feat: integrate auth endpoint"</code></pre>
+                        <h3>One-Click Installer (Recommended)</h3>
+                        <div class="code-block">
+                            <code>curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
 
-            <p>For more detailed configurations, check the <a href="configuration.html">Configuration Guide</a>.</p>
+                        <h3>From crates.io</h3>
+                        <div class="code-block">
+                            <code>cargo install phantomdev</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <h3>From Source</h3>
+                        <div class="code-block">
+                            <code>git clone https://github.com/John-Varghese-EH/PhantomDev.git
+cd PhantomDev
+cargo build --release
+cargo install --path crates/cli</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="info-box">
+                            <strong>Requirements:</strong> Rust 1.70 or later, Git 2.0 or later
+                        </div>
+                    </section>
+
+                    <section id="quick-start" class="docs-section">
+                        <h2>Quick Start</h2>
+
+                        <h3>1. Initialize Your Project</h3>
+                        <p>Navigate to your project directory and run:</p>
+                        <div class="code-block">
+                            <code>phantomdev init</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p>This creates a <code>.phantomdev/</code> directory with a default configuration file.</p>
+
+                        <h3>2. Scan for AI Patterns</h3>
+                        <p>Scan your staged files for AI-generated content:</p>
+                        <div class="code-block">
+                            <code>phantomdev scan</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <h3>3. Humanize Your Code</h3>
+                        <p>Apply human-like transformations to your code:</p>
+                        <div class="code-block">
+                            <code>phantomdev humanize</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <h3>4. Check Your Stealth Score</h3>
+                        <p>See how well your code blends in:</p>
+                        <div class="code-block">
+                            <code>phantomdev score</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section id="basic-commands" class="docs-section">
+                        <h2>Basic Commands</h2>
+
+                        <div class="command-list">
+                            <div class="command-item">
+                                <h4>phantomdev init</h4>
+                                <p>Initialize PhantomDev in the current directory. Creates configuration files and sets up the project structure.</p>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>phantomdev scan [options]</h4>
+                                <p>Scan files for AI-generated patterns.</p>
+                                <ul>
+                                    <li><code>--files <path></code> - Scan specific files</li>
+                                    <li><code>--verbose</code> - Show detailed output</li>
+                                    <li><code>--staged</code> - Scan only staged files (default)</li>
+                                </ul>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>phantomdev humanize [options]</h4>
+                                <p>Apply human-like transformations to code.</p>
+                                <ul>
+                                    <li><code>--files <path></code> - Humanize specific files</li>
+                                    <li><code>--entropy <0.0-1.0></code> - Set transformation intensity</li>
+                                    <li><code>--dry-run</code> - Preview changes without applying</li>
+                                </ul>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>phantomdev score [options]</h4>
+                                <p>Show stealth score for your code.</p>
+                                <ul>
+                                    <li><code>--detailed</code> - Show per-file breakdown</li>
+                                    <li><code>--files <path></code> - Score specific files</li>
+                                </ul>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>phantomdev dashboard</h4>
+                                <p>Launch the terminal UI dashboard for real-time monitoring.</p>
+                            </div>
+
+                            <div class="command-item">
+                                <h4>phantomdev config [options]</h4>
+                                <p>Manage PhantomDev configuration.</p>
+                                <ul>
+                                    <li><code>--show</code> - Display current configuration</li>
+                                    <li><code>--reset</code> - Reset to defaults</li>
+                                    <li><code>--edit</code> - Open config file in editor</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="docs-section">
+                        <h2>Next Steps</h2>
+                        <div class="next-steps">
+                            <a href="configuration.html" class="next-step-card">
+                                <h3>Configuration</h3>
+                                <p>Customize detection and humanization settings</p>
+                            </a>
+                            <a href="undercover.html" class="next-step-card">
+                                <h3>Undercover Mode</h3>
+                                <p>Learn advanced adversarial stylometry techniques</p>
+                            </a>
+                            <a href="api.html" class="next-step-card">
+                                <h3>API Reference</h3>
+                                <p>Complete API documentation</p>
+                            </a>
+                        </div>
+                    </section>
+                </article>
+            </div>
         </div>
     </main>
 
@@ -79,5 +249,40 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        function copyCode(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        // Active section highlighting
+        const sections = document.querySelectorAll('.docs-section[id]');
+        const navLinks = document.querySelectorAll('.docs-sidebar a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

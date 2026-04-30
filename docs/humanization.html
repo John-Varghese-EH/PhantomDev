@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Reference - PhantomDev</title>
+    <title>Code Humanization - PhantomDev</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +49,7 @@
                         <h3>Core Features</h3>
                         <ul>
                             <li><a href="detection.html">AI Detection</a></li>
-                            <li><a href="humanization.html">Code Humanization</a></li>
+                            <li><a href="#overview" class="active">Code Humanization</a></li>
                             <li><a href="jitter.html">Temporal Obfuscation</a></li>
                         </ul>
                     </div>
@@ -58,175 +58,50 @@
                         <ul>
                             <li><a href="undercover.html">Undercover Mode</a></li>
                             <li><a href="configuration.html">Configuration</a></li>
-                            <li><a href="#overview" class="active">API Reference</a></li>
+                            <li><a href="api.html">API Reference</a></li>
                         </ul>
                     </div>
                 </aside>
 
                 <article class="docs-content">
-                    <h1>API Reference</h1>
-                    <p class="docs-intro">Complete guide to the PhantomDev core library.</p>
+                    <h1>Code Humanization</h1>
+                    <p class="docs-intro">Transform AI-generated code to match your personal coding style.</p>
 
                     <section id="overview" class="docs-section">
                         <h2>Overview</h2>
-                        <p>PhantomDev provides a modular architecture. While most users will interface through the CLI, developers can integrate the specific underlying engines into their own Rust projects.</p>
+                        <p>PhantomDev's humanization engine learns your personal coding style from your repository history and applies it back to AI-assisted output. This helps maintain your unique coding signature while using AI tools.</p>
                     </section>
 
-                    <section id="crate-structure" class="docs-section">
-                        <h2>Crate Structure</h2>
-                        <ul>
-                            <li><code>phantomdev-core</code>: Core types and traits.</li>
-                            <li><code>phantomdev-detector</code>: AI stylometry detection engine.</li>
-                            <li><code>phantomdev-humanizer</code>: Code humanization tools.</li>
-                            <li><code>phantomdev-undercover</code>: Adversarial rewrite tools.</li>
-                            <li><code>phantomdev-jitter</code>: Temporal obfuscation features.</li>
-                            <li><code>phantomdev-tui</code>: The terminal UI dashboard implementation.</li>
-                        </ul>
-                    </section>
-
-                    <section id="detector-api" class="docs-section">
-                        <h2>Detector API</h2>
-                        <p>Use the detection engine to analyze code for AI-generated patterns.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_detector::PhantomDetector;
-use phantomdev_core::{CodeBlock, Language};
-
-fn main() -> anyhow::Result<()> {
-    let detector = PhantomDetector::new()?;
-    let code = CodeBlock {
-        path: "src/main.rs".into(),
-        language: Language::Rust,
-        content: "fn main() { println!(\"Hello World\"); }".into(),
-        line_range: (1, 1),
-    };
-
-    let result = detector.detect(&code)?;
-    println!("AI Probability: {:.2}%", result.score.ai_probability * 100.0);
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="humanizer-api" class="docs-section">
-                        <h2>Humanizer API</h2>
-                        <p>Transform code to match your personal style.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_humanizer::PhantomHumanizer;
-
-fn main() -> anyhow::Result<()> {
-    let humanizer = PhantomHumanizer::new();
-    let repo_path = std::env::current_dir()?;
-
-    // Learn style profile from git history
-    let profile = humanizer.learn_style(&repo_path)?;
-
-    // Use it to humanize code
-    // let humanized_code = humanizer.humanize(&code_block, &profile)?;
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="undercover-api" class="docs-section">
-                        <h2>Undercover API</h2>
-                        <p>Apply adversarial stylometry transformations.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_undercover::UndercoverTransformer;
-
-fn main() -> anyhow::Result<()> {
-    let transformer = UndercoverTransformer::new();
-
-    // Transform commit message
-    let original = "feat: Implement comprehensive user authentication";
-    let transformed = transformer.transform_message(original)?;
-
-    println!("Original: {}", original);
-    println!("Transformed: {}", transformed);
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="jitter-api" class="docs-section">
-                        <h2>Jitter API</h2>
-                        <p>Add temporal obfuscation to simulate organic development pace.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_jitter::JitterEngine;
-
-fn main() -> anyhow::Result<()> {
-    let jitter = JitterEngine::new(60, 300); // min 60s, max 300s
-
-    // Get a random delay
-    let delay = jitter.random_delay();
-    println!("Waiting {} seconds...", delay.as_secs());
-
-    std::thread::sleep(delay);
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="core-types" class="docs-section">
-                        <h2>Core Types</h2>
-                        <p>Common types used across all PhantomDev crates.</p>
+                    <section id="how-it-works" class="docs-section">
+                        <h2>How It Works</h2>
+                        <p>The humanization engine analyzes your past commits to learn:</p>
 
                         <div class="command-list">
                             <div class="command-item">
-                                <h4>CodeBlock</h4>
-                                <p>Represents a block of code with metadata including path, language, content, and line range.</p>
+                                <h4>Naming Conventions</h4>
+                                <p>How you name variables, functions, and classes (camelCase, snake_case, abbreviations).</p>
                             </div>
                             <div class="command-item">
-                                <h4>Language</h4>
-                                <p>Enum representing supported programming languages (Rust, Python, JavaScript, TypeScript, Go, C++).</p>
+                                <h4>Comment Style</h4>
+                                <p>Your comment patterns, verbosity, and preferred documentation style.</p>
                             </div>
                             <div class="command-item">
-                                <h4>DetectionResult</h4>
-                                <p>Result of AI detection including probability score, detected patterns, and confidence level.</p>
+                                <h4>Code Structure</h4>
+                                <p>Your preferred code organization and formatting patterns.</p>
                             </div>
                             <div class="command-item">
-                                <h4>StyleProfile</h4>
-                                <p>Learned coding style profile including naming conventions, comment patterns, and formatting preferences.</p>
+                                <h4>Line Cadence</h4>
+                                <p>Typical line lengths and code density patterns.</p>
                             </div>
                         </div>
                     </section>
 
-                    <section id="documentation" class="docs-section">
-                        <h2>Full Documentation</h2>
-                        <p>For extensive API documentation with examples, run:</p>
+                    <section id="using-humanization" class="docs-section">
+                        <h2>Using Humanization</h2>
+
+                        <h3>Humanize Staged Files</h3>
                         <div class="code-block">
-                            <code>cargo doc --open</code>
+                            <code>phantomdev humanize</code>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -234,7 +109,113 @@ fn main() -> anyhow::Result<()> {
                                 </svg>
                             </button>
                         </div>
-                        <p>This will generate and open the Rust documentation in your browser.</p>
+
+                        <h3>Humanize Specific Files</h3>
+                        <div class="code-block">
+                            <code>phantomdev humanize --files src/main.rs</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <h3>Control Entropy Level</h3>
+                        <div class="code-block">
+                            <code>phantomdev humanize --entropy 0.7</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <h3>Dry Run</h3>
+                        <div class="code-block">
+                            <code>phantomdev humanize --dry-run</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section id="transformations" class="docs-section">
+                        <h2>Transformations</h2>
+                        <p>The humanization engine applies the following transformations:</p>
+
+                        <div class="command-list">
+                            <div class="command-item">
+                                <h4>Variable Renaming</h4>
+                                <p>Rename variables to match your personal naming conventions.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Comment Injection</h4>
+                                <p>Add or remove comments to match your style.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Code Restructuring</h4>
+                                <p>Reorganize code to match your preferred structure.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Entropy Injection</h4>
+                                <p>Add natural variation to avoid predictable patterns.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="entropy-levels" class="docs-section">
+                        <h2>Entropy Levels</h2>
+                        <p>Control the intensity of transformations with the entropy parameter:</p>
+
+                        <div class="config-options">
+                            <div class="config-option">
+                                <h4>0.0 - 0.3</h4>
+                                <p>Minimal changes - Only obvious AI patterns are modified</p>
+                            </div>
+                            <div class="config-option">
+                                <h4>0.3 - 0.7</h4>
+                                <p>Moderate changes - Balanced transformation (default)</p>
+                            </div>
+                            <div class="config-option">
+                                <h4>0.7 - 1.0</h4>
+                                <p>Aggressive changes - Maximum humanization</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="examples" class="docs-section">
+                        <h2>Examples</h2>
+
+                        <h3>Before (AI-generated)</h3>
+                        <div class="code-block">
+                            <code>// This function processes user input data
+// It validates the input and returns a result
+function processUserData(userData) {
+    // Check if user data is valid
+    if (!userData || !userData.id) {
+        return null;
+    }
+    // Return the processed data
+    return {
+        id: userData.id,
+        name: userData.name,
+        processed: true
+    };
+}</code>
+                        </div>
+
+                        <h3>After (Humanized)</h3>
+                        <div class="code-block">
+                            <code>function handleUser(data) {
+    if (!data?.id) return null;
+    return { id: data.id, name: data.name, ok: true };
+}</code>
+                        </div>
                     </section>
                 </article>
             </div>

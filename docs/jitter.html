@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undercover Mode - PhantomDev</title>
+    <title>Temporal Obfuscation - PhantomDev</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,13 +50,13 @@
                         <ul>
                             <li><a href="detection.html">AI Detection</a></li>
                             <li><a href="humanization.html">Code Humanization</a></li>
-                            <li><a href="jitter.html">Temporal Obfuscation</a></li>
+                            <li><a href="#overview" class="active">Temporal Obfuscation</a></li>
                         </ul>
                     </div>
                     <div class="sidebar-section">
                         <h3>Advanced</h3>
                         <ul>
-                            <li><a href="#what-is-undercover" class="active">Undercover Mode</a></li>
+                            <li><a href="undercover.html">Undercover Mode</a></li>
                             <li><a href="configuration.html">Configuration</a></li>
                             <li><a href="api.html">API Reference</a></li>
                         </ul>
@@ -64,120 +64,119 @@
                 </aside>
 
                 <article class="docs-content">
-                    <h1>Undercover Mode</h1>
-                    <p class="docs-intro">Advanced adversarial stylometry techniques to maintain your authorship.</p>
+                    <h1>Temporal Obfuscation (Jitter)</h1>
+                    <p class="docs-intro">Simulate organic development pace to avoid timing-based detection.</p>
 
-                    <section id="what-is-undercover" class="docs-section">
-                        <h2>What is Undercover Mode?</h2>
-                        <p>Undercover Mode takes code humanization to the next level by specifically targeting structural fingerprints often left by Large Language Models. It actively modifies code syntax, comments, and commit messages to align perfectly with your past Git history.</p>
+                    <section id="overview" class="docs-section">
+                        <h2>Overview</h2>
+                        <p>PhantomDev's Jitter engine introduces artificial delays between operations to simulate human coding cadences. This helps avoid timing-based developer analytics that can identify AI-assisted development patterns.</p>
                     </section>
 
-                    <section id="using-undercover" class="docs-section">
-                        <h2>Using Undercover</h2>
-
-                        <h3>Transform Commit Messages</h3>
-                        <p>LLMs tend to write highly structured and predictable commit messages (e.g., using rigid Conventional Commits perfectly). Undercover mode breaks this rigidity:</p>
-                        <div class="code-block">
-                            <code>phantomdev undercover --message "feat: Implement comprehensive user authentication"</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <p>This will rewrite the message into something more organically human based on your repository history.</p>
-
-                        <h3>Rewrite Comments</h3>
-                        <p>AI writes overly enthusiastic and descriptive comments. You can tone them down and rephrase them:</p>
-                        <div class="code-block">
-                            <code>phantomdev undercover --comments</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <h3>Variable Name Substitution</h3>
-                        <p>If you usually name your variables a certain way (e.g., <code>idx</code> instead of <code>index</code>), Undercover Mode will enforce it on AI-generated snippets:</p>
-                        <div class="code-block">
-                            <code>phantomdev undercover --variables</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <h3>Combined Power</h3>
-                        <p>You can execute multiple transformations simultaneously before staging your files:</p>
-                        <div class="code-block">
-                            <code>phantomdev undercover --comments --variables</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="undercover-rules" class="docs-section">
-                        <h2>Stylistic Rules</h2>
-                        <p>Undercover Mode applies the following transformations based on your repository history:</p>
+                    <section id="how-it-works" class="docs-section">
+                        <h2>How It Works</h2>
+                        <p>The Jitter engine uses a delayed staging buffer with configurable timing windows:</p>
 
                         <div class="command-list">
                             <div class="command-item">
-                                <h4>Case Sensitivity</h4>
-                                <p>Prefer lowercase for short descriptions. Use Sentence case only for long explanations.</p>
+                                <h4>Delayed Staging</h4>
+                                <p>Files are staged with random delays between operations.</p>
                             </div>
                             <div class="command-item">
-                                <h4>Punctuation</h4>
-                                <p>Remove terminal periods from 80% of single-line strings.</p>
+                                <h4>Configurable Windows</h4>
+                                <p>Set minimum and maximum delay times to match your typical workflow.</p>
                             </div>
                             <div class="command-item">
-                                <h4>Vocabulary Filter</h4>
-                                <p>Strictly ban: "comprehensive", "ensure", "robust", "leveraging", "meticulous", "seamless", "enhanced".</p>
+                                <h4>Random Distribution</h4>
+                                <p>Delays are randomly distributed within the configured range for natural variation.</p>
                             </div>
                             <div class="command-item">
-                                <h4>Semantic Compression</h4>
-                                <p>Replace formal words with dev-slang (e.g., "authentication" → "auth", "information" → "info", "utility" → "utils").</p>
-                            </div>
-                            <div class="command-item">
-                                <h4>Grammar</h4>
-                                <p>Accept fragments. Prioritize brevity over "proper" English.</p>
+                                <h4>Commit Spacing</h4>
+                                <p>Automatically spaces commits to avoid rapid-fire patterns.</p>
                             </div>
                         </div>
                     </section>
 
-                    <section id="undercover-examples" class="docs-section">
-                        <h2>Examples</h2>
+                    <section id="enabling-jitter" class="docs-section">
+                        <h2>Enabling Jitter</h2>
 
-                        <h3>Before (AI-generated)</h3>
+                        <h3>Configuration</h3>
+                        <p>Add the following to your <code>.phantomdev/config.toml</code>:</p>
                         <div class="code-block">
-                            <code>// This function implements comprehensive user authentication
-// It ensures robust security by leveraging JWT tokens
-function authenticateUser(userCredentials) {
-    // Validate the provided information
-    if (!userCredentials) {
-        return null;
-    }
-    // Generate enhanced token
-    return generateToken(userCredentials);
-}</code>
+                            <code>[jitter]
+enabled = true
+min_delay_secs = 60
+max_delay_secs = 300</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
                         </div>
 
-                        <h3>After (Undercover-transformed)</h3>
-                        <div class="code-block">
-                            <code>// auth check
-function authUser(creds) {
-    if (!creds) return null;
-    return genToken(creds);
-}</code>
+                        <h3>Using Jitter</h3>
+                        <p>Once enabled, jitter automatically applies to:</p>
+                        <ul>
+                            <li>File staging operations</li>
+                            <li>Commit creation</li>
+                            <li>Code humanization</li>
+                        </ul>
+                    </section>
+
+                    <section id="timing-configuration" class="docs-section">
+                        <h2>Timing Configuration</h2>
+                        <p>Choose timing windows that match your typical development pace:</p>
+
+                        <div class="config-options">
+                            <div class="config-option">
+                                <h4>Conservative (30-120s)</h4>
+                                <p>For developers who work in short bursts</p>
+                            </div>
+                            <div class="config-option">
+                                <h4>Moderate (60-300s)</h4>
+                                <p>For typical development workflows (default)</p>
+                            </div>
+                            <div class="config-option">
+                                <h4>Extended (120-600s)</h4>
+                                <p>For developers who take longer between changes</p>
+                            </div>
                         </div>
+                    </section>
+
+                    <section id="use-cases" class="docs-section">
+                        <h2>Use Cases</h2>
+
+                        <div class="command-list">
+                            <div class="command-item">
+                                <h4>Open Source Contributions</h4>
+                                <p>Make your contributions appear more organic when working on public projects.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Team Projects</h4>
+                                <p>Avoid standing out with unusually rapid commit patterns.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Code Reviews</h4>
+                                <p>Space out changes to match typical review cycles.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Long-running Features</h4>
+                                <p>Simulate natural development progression over time.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="limitations" class="docs-section">
+                        <h2>Limitations</h2>
+                        <div class="info-box">
+                            <strong>Important:</strong> Jitter only affects timing, not code content. For complete protection, combine with detection and humanization features.
+                        </div>
+                        <ul>
+                            <li>Does not modify code content</li>
+                            <li>Requires enabled configuration</li>
+                            <li>May slow down your workflow</li>
+                            <li>Not effective for single-commit changes</li>
+                        </ul>
                     </section>
                 </article>
             </div>

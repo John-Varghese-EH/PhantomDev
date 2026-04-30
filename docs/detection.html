@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Reference - PhantomDev</title>
+    <title>AI Detection - PhantomDev</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,7 +48,7 @@
                     <div class="sidebar-section">
                         <h3>Core Features</h3>
                         <ul>
-                            <li><a href="detection.html">AI Detection</a></li>
+                            <li><a href="#overview" class="active">AI Detection</a></li>
                             <li><a href="humanization.html">Code Humanization</a></li>
                             <li><a href="jitter.html">Temporal Obfuscation</a></li>
                         </ul>
@@ -58,175 +58,46 @@
                         <ul>
                             <li><a href="undercover.html">Undercover Mode</a></li>
                             <li><a href="configuration.html">Configuration</a></li>
-                            <li><a href="#overview" class="active">API Reference</a></li>
+                            <li><a href="api.html">API Reference</a></li>
                         </ul>
                     </div>
                 </aside>
 
                 <article class="docs-content">
-                    <h1>API Reference</h1>
-                    <p class="docs-intro">Complete guide to the PhantomDev core library.</p>
+                    <h1>AI Detection</h1>
+                    <p class="docs-intro">Detect AI-generated code patterns with local ML models and cloud fallback.</p>
 
                     <section id="overview" class="docs-section">
                         <h2>Overview</h2>
-                        <p>PhantomDev provides a modular architecture. While most users will interface through the CLI, developers can integrate the specific underlying engines into their own Rust projects.</p>
+                        <p>PhantomDev's detection engine analyzes code for patterns typical of AI-generated content. It uses a combination of local ML models and pattern-based detection to identify code that doesn't "look human."</p>
                     </section>
 
-                    <section id="crate-structure" class="docs-section">
-                        <h2>Crate Structure</h2>
-                        <ul>
-                            <li><code>phantomdev-core</code>: Core types and traits.</li>
-                            <li><code>phantomdev-detector</code>: AI stylometry detection engine.</li>
-                            <li><code>phantomdev-humanizer</code>: Code humanization tools.</li>
-                            <li><code>phantomdev-undercover</code>: Adversarial rewrite tools.</li>
-                            <li><code>phantomdev-jitter</code>: Temporal obfuscation features.</li>
-                            <li><code>phantomdev-tui</code>: The terminal UI dashboard implementation.</li>
-                        </ul>
-                    </section>
-
-                    <section id="detector-api" class="docs-section">
-                        <h2>Detector API</h2>
-                        <p>Use the detection engine to analyze code for AI-generated patterns.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_detector::PhantomDetector;
-use phantomdev_core::{CodeBlock, Language};
-
-fn main() -> anyhow::Result<()> {
-    let detector = PhantomDetector::new()?;
-    let code = CodeBlock {
-        path: "src/main.rs".into(),
-        language: Language::Rust,
-        content: "fn main() { println!(\"Hello World\"); }".into(),
-        line_range: (1, 1),
-    };
-
-    let result = detector.detect(&code)?;
-    println!("AI Probability: {:.2}%", result.score.ai_probability * 100.0);
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="humanizer-api" class="docs-section">
-                        <h2>Humanizer API</h2>
-                        <p>Transform code to match your personal style.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_humanizer::PhantomHumanizer;
-
-fn main() -> anyhow::Result<()> {
-    let humanizer = PhantomHumanizer::new();
-    let repo_path = std::env::current_dir()?;
-
-    // Learn style profile from git history
-    let profile = humanizer.learn_style(&repo_path)?;
-
-    // Use it to humanize code
-    // let humanized_code = humanizer.humanize(&code_block, &profile)?;
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="undercover-api" class="docs-section">
-                        <h2>Undercover API</h2>
-                        <p>Apply adversarial stylometry transformations.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_undercover::UndercoverTransformer;
-
-fn main() -> anyhow::Result<()> {
-    let transformer = UndercoverTransformer::new();
-
-    // Transform commit message
-    let original = "feat: Implement comprehensive user authentication";
-    let transformed = transformer.transform_message(original)?;
-
-    println!("Original: {}", original);
-    println!("Transformed: {}", transformed);
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="jitter-api" class="docs-section">
-                        <h2>Jitter API</h2>
-                        <p>Add temporal obfuscation to simulate organic development pace.</p>
-
-                        <div class="code-block">
-                            <code>use phantomdev_jitter::JitterEngine;
-
-fn main() -> anyhow::Result<()> {
-    let jitter = JitterEngine::new(60, 300); // min 60s, max 300s
-
-    // Get a random delay
-    let delay = jitter.random_delay();
-    println!("Waiting {} seconds...", delay.as_secs());
-
-    std::thread::sleep(delay);
-
-    Ok(())
-}</code>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </section>
-
-                    <section id="core-types" class="docs-section">
-                        <h2>Core Types</h2>
-                        <p>Common types used across all PhantomDev crates.</p>
+                    <section id="how-it-works" class="docs-section">
+                        <h2>How It Works</h2>
+                        <p>The detection engine uses multiple approaches to identify AI-generated code:</p>
 
                         <div class="command-list">
                             <div class="command-item">
-                                <h4>CodeBlock</h4>
-                                <p>Represents a block of code with metadata including path, language, content, and line range.</p>
+                                <h4>Local ML Models</h4>
+                                <p>RoBERTa-based models trained on code to detect AI-generated patterns. Runs entirely on your machine with no network required.</p>
                             </div>
                             <div class="command-item">
-                                <h4>Language</h4>
-                                <p>Enum representing supported programming languages (Rust, Python, JavaScript, TypeScript, Go, C++).</p>
+                                <h4>Pattern Detection</h4>
+                                <p>Identifies common AI tells: watermarks, uniform commenting, emoji overuse, and predictable variable naming.</p>
                             </div>
                             <div class="command-item">
-                                <h4>DetectionResult</h4>
-                                <p>Result of AI detection including probability score, detected patterns, and confidence level.</p>
-                            </div>
-                            <div class="command-item">
-                                <h4>StyleProfile</h4>
-                                <p>Learned coding style profile including naming conventions, comment patterns, and formatting preferences.</p>
+                                <h4>Cloud Fallback</h4>
+                                <p>Optional cloud API integration via OpenRouter and Anthropic for enhanced detection accuracy.</p>
                             </div>
                         </div>
                     </section>
 
-                    <section id="documentation" class="docs-section">
-                        <h2>Full Documentation</h2>
-                        <p>For extensive API documentation with examples, run:</p>
+                    <section id="using-detection" class="docs-section">
+                        <h2>Using Detection</h2>
+
+                        <h3>Scan Staged Files</h3>
                         <div class="code-block">
-                            <code>cargo doc --open</code>
+                            <code>phantomdev scan</code>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -234,7 +105,93 @@ fn main() -> anyhow::Result<()> {
                                 </svg>
                             </button>
                         </div>
-                        <p>This will generate and open the Rust documentation in your browser.</p>
+
+                        <h3>Scan Specific Files</h3>
+                        <div class="code-block">
+                            <code>phantomdev scan --files src/main.rs src/lib.rs</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <h3>Verbose Output</h3>
+                        <div class="code-block">
+                            <code>phantomdev scan --verbose</code>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section id="detected-patterns" class="docs-section">
+                        <h2>Detected Patterns</h2>
+                        <p>PhantomDev can detect the following AI-generated patterns:</p>
+
+                        <div class="command-list">
+                            <div class="command-item">
+                                <h4>Watermarks</h4>
+                                <p>Hidden patterns embedded by some AI models to identify generated content.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Uniform Commenting</h4>
+                                <p>Overly consistent comment style and excessive documentation.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Emoji Overuse</h4>
+                                <p>Excessive or inappropriate emoji usage in code comments.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Predictable Naming</h4>
+                                <p>Variable and function names that follow AI-generated patterns.</p>
+                            </div>
+                            <div class="command-item">
+                                <h4>Structural Patterns</h4>
+                                <p>Code structure that matches common AI output templates.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="detection-score" class="docs-section">
+                        <h2>Understanding the Score</h2>
+                        <p>The detection engine returns a probability score from 0.0 to 1.0:</p>
+
+                        <div class="config-options">
+                            <div class="config-option">
+                                <h4>0.0 - 0.15</h4>
+                                <p>Low probability - Code appears human-written</p>
+                            </div>
+                            <div class="config-option">
+                                <h4>0.15 - 0.50</h4>
+                                <p>Medium probability - Some AI patterns detected</p>
+                            </div>
+                            <div class="config-option">
+                                <h4>0.50 - 1.0</h4>
+                                <p>High probability - Code likely AI-generated</p>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <strong>Note:</strong> The threshold can be configured in your <code>.phantomdev/config.toml</code> file.
+                        </div>
+                    </section>
+
+                    <section id="supported-languages" class="docs-section">
+                        <h2>Supported Languages</h2>
+                        <p>PhantomDev supports detection for the following programming languages:</p>
+                        <ul>
+                            <li>Rust</li>
+                            <li>Python</li>
+                            <li>JavaScript</li>
+                            <li>TypeScript</li>
+                            <li>Go</li>
+                            <li>C++</li>
+                        </ul>
                     </section>
                 </article>
             </div>

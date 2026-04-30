@@ -1076,3 +1076,44 @@ body {
         gap: 0;
     }
 }
+
+/* Config Options */
+.config-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.config-option {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.config-option h4 {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+}
+
+.config-option p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Code blocks in docs */
+.docs-section .code-block {
+    margin: 1rem 0;
+}
+
+.docs-section h3 {
+    margin-top: 2rem;
+}
+
+.docs-section h4 {
+    margin-top: 1.5rem;
+}
