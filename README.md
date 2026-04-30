@@ -109,7 +109,7 @@ cargo install --path crates/cli
 ### One-Click Installer
 
 ```bash
-curl -sSL https://phantomdev.io/install.sh | bash
+curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash
 ```
 
 ---
