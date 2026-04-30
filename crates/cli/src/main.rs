@@ -8,10 +8,8 @@ use colored::Colorize;
 use phantomdev_core::{CodeBlock, Config, Detector, Humanizer, Language};
 use phantomdev_detector::PhantomDetector;
 use phantomdev_humanizer::PhantomHumanizer;
-use phantomdev_jitter::PhantomJitter;
 use phantomdev_undercover::UndercoverEngine;
 use phantomdev_tui::PhantomTui;
-use std::path::PathBuf;
 
 /// PhantomDev - The Adversarial Stylometry Framework for the AI-Augmented Developer
 #[derive(Parser)]
@@ -214,7 +212,7 @@ fn cmd_easy_install(ide: Option<String>) -> Result<()> {
 fn cmd_install_skills(ide: String) -> Result<()> {
     let skills_dir = PathBuf::from("skills");
 
-    let ides = if ide.to_lowercase() == "all" {
+    let ides: Vec<&str> = if ide.to_lowercase() == "all" {
         vec!["claude", "cursor", "windsurf", "antigravity"]
     } else {
         vec![ide.to_lowercase().as_str()]
@@ -306,7 +304,7 @@ fn cmd_scan(files: Vec<String>, verbose: bool) -> Result<()> {
 }
 
 /// Humanize code to match repository style
-fn cmd_humanize(files: Vec<String>, entropy: Option<f32>) -> Result<()> {
+fn cmd_humanize(files: Vec<String>, _entropy: Option<f32>) -> Result<()> {
     println!("{}", "Humanizing code...".cyan());
 
     let humanizer = PhantomHumanizer::new();
@@ -333,7 +331,7 @@ fn cmd_humanize(files: Vec<String>, entropy: Option<f32>) -> Result<()> {
 
     for file_path in files_to_humanize {
         if let Some(code) = read_code_block(&file_path)? {
-            let humanized = humanizer.humanize(&code, &profile)?;
+            let _humanized = humanizer.humanize(&code, &profile)?;
             println!("  ✓ {}", file_path.display());
             // TODO: Write humanized content back to file
         }
@@ -345,7 +343,7 @@ fn cmd_humanize(files: Vec<String>, entropy: Option<f32>) -> Result<()> {
 }
 
 /// Undercover mode - transform AI-generated content to human-like patterns
-fn cmd_undercover(message: Option<String>, comments: bool, variables: bool, entropy: Option<f32>) -> Result<()> {
+fn cmd_undercover(message: Option<String>, comments: bool, variables: bool, _entropy: Option<f32>) -> Result<()> {
     println!("{}", "🕵️ PhantomDev Undercover Mode".cyan());
     println!();
 
