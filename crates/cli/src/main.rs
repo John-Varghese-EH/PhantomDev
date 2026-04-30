@@ -10,6 +10,7 @@ use phantomdev_detector::PhantomDetector;
 use phantomdev_humanizer::PhantomHumanizer;
 use phantomdev_undercover::UndercoverEngine;
 use phantomdev_tui::PhantomTui;
+use std::path::PathBuf;
 
 /// PhantomDev - The Adversarial Stylometry Framework for the AI-Augmented Developer
 #[derive(Parser)]
@@ -212,10 +213,11 @@ fn cmd_easy_install(ide: Option<String>) -> Result<()> {
 fn cmd_install_skills(ide: String) -> Result<()> {
     let skills_dir = PathBuf::from("skills");
 
-    let ides: Vec<&str> = if ide.to_lowercase() == "all" {
+    let ide_lower = ide.to_lowercase();
+    let ides: Vec<&str> = if ide_lower == "all" {
         vec!["claude", "cursor", "windsurf", "antigravity"]
     } else {
-        vec![ide.to_lowercase().as_str()]
+        vec![ide_lower.as_str()]
     };
 
     for ide_name in ides {

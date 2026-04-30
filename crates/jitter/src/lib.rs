@@ -9,7 +9,6 @@
 
 use phantomdev_core::{JitterEngine, JitterOperation, JitterSchedule};
 use rand::Rng;
-use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 

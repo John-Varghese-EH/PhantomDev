@@ -40,7 +40,7 @@ pub struct PhantomTui {
 }
 
 /// Available tabs
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Tab {
     Overview,
     Detection,
