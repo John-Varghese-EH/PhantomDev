@@ -14,6 +14,7 @@
 [![Crates.io](https://img.shields.io/crates/v/phantomdev.svg)](https://crates.io/crates/phantomdev)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Build](https://github.com/John-Varghese-EH/PhantomDev/actions/workflows/ci.yml/badge.svg)](https://github.com/John-Varghese-EH/PhantomDev/actions)
+[![GitHub Pages](https://img.shields.io/badge/docs-github--pages-blue.svg)](https://john-varghese-eh.github.io/PhantomDev/)
 
 ---
 
@@ -108,7 +109,7 @@ cargo install --path crates/cli
 ### One-Click Installer
 
 ```bash
-curl -sSL https://github.io/PhantomDev/install.sh | bash
+curl -sSL https://phantomdev.io/install.sh | bash
 ```
 
 ---
@@ -293,6 +294,10 @@ cargo install phantomdev
 ```
 
 *(For detailed workspace publishing instructions, see [cargo-instruction.md](cargo-instruction.md))*
+
+## Documentation
+
+Full documentation is available at [john-varghese-eh.github.io/PhantomDev](https://john-varghese-eh.github.io/PhantomDev/)
 
 ---
 
