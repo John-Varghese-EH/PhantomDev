@@ -8,7 +8,6 @@ const targetPaths = [
 
 const injectedScript = `
         <style>
-            #sidebar { display: none !important; }
             #graph   { width: 100% !important; flex: 1 !important; }
             body     { overflow: hidden !important; }
         </style>
@@ -83,10 +82,20 @@ const injectedScript = `
 for (const file of targetPaths) {
   if (fs.existsSync(file)) {
     let html = fs.readFileSync(file, 'utf8');
-    if (!html.includes('id="sidebar" { display: none')) {
+    if (!html.includes('window.networkReady')) {
+      // Strip out the bulky sidebar HTML, replacing it with barebones hidden elements 
+      // so the original script's event listeners don't throw errors.
+      const mockSidebar = `<div id="sidebar" style="display: none;">
+  <input id="search">
+  <div id="search-results"></div>
+  <div id="info-content"></div>
+</div>
+<script>`;
+      html = html.replace(/<div id="sidebar">[\s\S]*?<\/div>\s*<script>/, mockSidebar);
+
       html = html.replace('</body>', injectedScript + '\n</body>');
       fs.writeFileSync(file, html);
-      console.log('Successfully injected animation and styles into ' + file);
+      console.log('Successfully injected animation and stripped sidebar in ' + file);
     } else {
       console.log(file + ' already injected.');
     }
