@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - 'docs/**'
+      - 'graphify-out/**'
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      - name: Copy graph into docs
+        run: cp graphify-out/graph.html docs/graph.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
