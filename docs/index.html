@@ -369,7 +369,7 @@ cargo install --path crates/cli</code>
     <section class="graph-section">
         <div class="graph-section-header">
             <h2>Codebase Architecture</h2>
-            <p>Interactive knowledge graph of the PhantomDev codebase - 187 nodes, 356 edges, 17 communities</p>
+            <p>Interactive knowledge graph of the PhantomDev codebase</p>
         </div>
         <div class="graph-embed">
             <iframe src="../graphify-out/graph.html" id="codebase-graph" title="PhantomDev Codebase Graph"
@@ -516,10 +516,10 @@ cargo install --path crates/cli</code>
                 `;
                 iDoc.head.appendChild(style);
 
-                // Animation is self-contained in graph.html — runs automatically
+                // Animation is self-contained in graph.html - runs automatically
                 // after physics stabilizes (window.networkReady + startTour/stopTour API)
 
-            } catch (e) { /* cross-origin — silently skip */ }
+            } catch (e) { /* cross-origin - silently skip */ }
         });
 
         function pauseGraphTour() {
@@ -527,7 +527,7 @@ cargo install --path crates/cli</code>
                 const iWin = graphIframe.contentWindow;
                 iWin.phantomPaused = true;
                 if (iWin.stopTour) iWin.stopTour();
-            } catch (e) {}
+            } catch (e) { }
         }
 
         function resumeGraphTour() {
@@ -535,7 +535,7 @@ cargo install --path crates/cli</code>
                 const iWin = graphIframe.contentWindow;
                 iWin.phantomPaused = false;
                 if (iWin.startTour) setTimeout(() => iWin.startTour(), 600);
-            } catch (e) {}
+            } catch (e) { }
         }
 
         // Click overlay → activate interaction, pause tour

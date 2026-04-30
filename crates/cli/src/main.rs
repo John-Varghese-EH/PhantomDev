@@ -356,7 +356,7 @@ fn cmd_init(force: bool) -> Result<()> {
 
     println!("{}", "✓ Initialized!".green());
     println!();
-    println!("{}", "Ready to go! Run {} to check your code".cyan(), "phantomdev".bold());
+    println!("Ready to go! Run {} to check your code", "phantomdev".cyan());
 
     Ok(())
 }

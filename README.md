@@ -5,6 +5,10 @@
  /______\  github.com/John-Varghese-EH/PhantomDev
 ```
 
+<div align="center">
+
+  <img src="assets/logo.svg" alt="PhantomDev Logo" width="100" />
+
 # PhantomDev
 
 **Adversarial Stylometry Framework for the AI-Augmented Developer**
@@ -15,6 +19,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Build](https://github.com/John-Varghese-EH/PhantomDev/actions/workflows/ci.yml/badge.svg)](https://github.com/John-Varghese-EH/PhantomDev/actions)
 [![GitHub Pages](https://img.shields.io/badge/docs-github--pages-blue.svg)](https://john-varghese-eh.github.io/PhantomDev/)
+
+</div>
 
 ---
 

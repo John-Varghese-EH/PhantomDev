@@ -156,8 +156,15 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .hero-title {
@@ -290,9 +297,17 @@ body {
     border-radius: 50%;
 }
 
-.terminal-buttons span:nth-child(1) { background: #ef4444; }
-.terminal-buttons span:nth-child(2) { background: #f59e0b; }
-.terminal-buttons span:nth-child(3) { background: #10b981; }
+.terminal-buttons span:nth-child(1) {
+    background: #ef4444;
+}
+
+.terminal-buttons span:nth-child(2) {
+    background: #f59e0b;
+}
+
+.terminal-buttons span:nth-child(3) {
+    background: #10b981;
+}
 
 .terminal-title {
     font-family: var(--font-mono);
@@ -326,17 +341,33 @@ body {
     padding-left: 1.5rem;
 }
 
-.success { color: var(--success); }
-.info { color: var(--accent-primary); }
-.warning { color: var(--warning); }
+.success {
+    color: var(--success);
+}
+
+.info {
+    color: var(--accent-primary);
+}
+
+.warning {
+    color: var(--warning);
+}
 
 .cursor {
     animation: blink 1s infinite;
 }
 
 @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
 }
 
 /* Features */
@@ -690,7 +721,8 @@ body {
     height: 480px;
     border: none;
     display: block;
-    pointer-events: none; /* blocked by default — overlay handles activation */
+    pointer-events: none;
+    /* blocked by default - overlay handles activation */
 }
 
 .graph-overlay {
@@ -846,7 +878,8 @@ body {
     line-height: 1.7;
 }
 
-.doc-content ul, .doc-content ol {
+.doc-content ul,
+.doc-content ol {
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
     padding-left: 2rem;
