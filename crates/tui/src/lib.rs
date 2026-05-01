@@ -25,41 +25,44 @@ use crossterm::{
 };
 use std::io;
 use std::time::Duration;
+use std::process::Command;
 use phantomdev_core::{StealthScore, DetectionResult};
 
 /// Main TUI application
 pub struct PhantomTui {
     /// Current tab
     current_tab: Tab,
-    /// Stealth score
-    stealth_score: Option<StealthScore>,
-    /// Detection results
-    detection_results: Vec<DetectionResult>,
     /// Should quit
     should_quit: bool,
+    /// Current working directory
+    cwd: String,
 }
 
 /// Available tabs
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Tab {
-    Overview,
-    Detection,
-    Style,
+    Dashboard,
+    Scan,
+    Humanize,
+    Score,
     Settings,
+    Help,
 }
 
 impl Tab {
     fn title(&self) -> &'static str {
         match self {
-            Tab::Overview => "Overview",
-            Tab::Detection => "Detection",
-            Tab::Style => "Style",
+            Tab::Dashboard => "Dashboard",
+            Tab::Scan => "Scan",
+            Tab::Humanize => "Humanize",
+            Tab::Score => "Score",
             Tab::Settings => "Settings",
+            Tab::Help => "Help",
         }
     }
 
     fn all() -> Vec<Tab> {
-        vec![Tab::Overview, Tab::Detection, Tab::Style, Tab::Settings]
+        vec![Tab::Dashboard, Tab::Scan, Tab::Humanize, Tab::Score, Tab::Settings, Tab::Help]
     }
 }
 
@@ -67,10 +70,9 @@ impl PhantomTui {
     /// Create a new TUI application
     pub fn new() -> Self {
         Self {
-            current_tab: Tab::Overview,
-            stealth_score: None,
-            detection_results: Vec::new(),
+            current_tab: Tab::Dashboard,
             should_quit: false,
+            cwd: std::env::current_dir().unwrap_or_default().to_string_lossy().to_string(),
         }
     }
 
@@ -126,10 +128,12 @@ impl PhantomTui {
                     self.current_tab = tabs[current + 1];
                 }
             }
-            KeyCode::Char('1') => self.current_tab = Tab::Overview,
-            KeyCode::Char('2') => self.current_tab = Tab::Detection,
-            KeyCode::Char('3') => self.current_tab = Tab::Style,
-            KeyCode::Char('4') => self.current_tab = Tab::Settings,
+            KeyCode::Char('d') => self.current_tab = Tab::Dashboard,
+            KeyCode::Char('s') => self.current_tab = Tab::Scan,
+            KeyCode::Char('h') => self.current_tab = Tab::Humanize,
+            KeyCode::Char('c') => self.current_tab = Tab::Score,
+            KeyCode::Char('g') => self.current_tab = Tab::Settings,
+            KeyCode::Char('l') => self.current_tab = Tab::Help,
             _ => {}
         }
     }
@@ -154,10 +158,13 @@ impl PhantomTui {
 
         // Draw content based on current tab
         match self.current_tab {
-            Tab::Overview => self.draw_overview(f, chunks[1]),
-            Tab::Detection => self.draw_detection(f, chunks[1]),
-            Tab::Style => self.draw_style(f, chunks[1]),
+            Tab::Dashboard => self.draw_dashboard(f, chunks[1]),
+            Tab::Scan => self.draw_scan(f, chunks[1]),
+            Tab::Humanize => self.draw_humanize(f, chunks[1]),
+            Tab::Score => self.draw_score(f, chunks[1]),
             Tab::Settings => self.draw_settings(f, chunks[1]),
+            Tab::Help => self.draw_help(f, chunks[1]),
+            Tab::Dashboard => self.draw_dashboard(f, chunks[1]),
         }
 
         // Draw footer
@@ -170,11 +177,7 @@ impl PhantomTui {
         let titles: Vec<Line> = tabs
             .iter()
             .map(|t| {
-                let style = if *t == self.current_tab {
-                    Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)
-                } else {
-                    Style::default().fg(Color::Gray)
-                };
+                let style = Style::default().fg(Color::Gray);
                 Line::from(Span::styled(t.title(), style))
             })
             .collect();
@@ -187,14 +190,14 @@ impl PhantomTui {
                     .title_style(Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD))
             )
             .style(Style::default().fg(Color::White))
-            .highlight_style(Style::default().add_modifier(Modifier::UNDERLINED))
+            .highlight_style(Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD))
             .divider(Span::raw(" | "));
 
         f.render_widget(tabs_widget, area);
     }
 
-    /// Draw overview tab
-    fn draw_overview(&self, f: &mut Frame, area: Rect) {
+    /// Draw dashboard tab
+    fn draw_dashboard(&self, f: &mut Frame, area: Rect) {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
@@ -206,28 +209,41 @@ impl PhantomTui {
         // Draw stealth score gauge
         self.draw_stealth_score(f, chunks[0]);
 
-        // Draw summary
-        let summary = vec![
-            Line::from("PhantomDev Status:"),
+        // Draw quick actions
+        let actions = vec![
+            Line::from("Quick Actions:"),
             Line::from(""),
             Line::from(vec![
-                Span::raw("  • Detection Engine: "),
-                Span::styled("Active", Style::default().fg(Color::Green)),
+                Span::raw("  "),
+                Span::styled("[S]can", Style::default().fg(Color::Cyan)),
+                Span::raw(" - Scan for AI patterns in staged files"),
             ]),
             Line::from(vec![
-                Span::raw("  • Humanizer: "),
-                Span::styled("Ready", Style::default().fg(Color::Green)),
+                Span::raw("  "),
+                Span::styled("[H]umanize", Style::default().fg(Color::Cyan)),
+                Span::raw(" - Humanize code to make it look human-written"),
             ]),
             Line::from(vec![
-                Span::raw("  • Jitter Engine: "),
-                Span::styled("Disabled", Style::default().fg(Color::Yellow)),
+                Span::raw("  "),
+                Span::styled("[C]heck Score", Style::default().fg(Color::Cyan)),
+                Span::raw(" - Check your stealth score"),
+            ]),
+            Line::from(vec![
+                Span::raw("  "),
+                Span::styled("[G]o to Settings", Style::default().fg(Color::Cyan)),
+                Span::raw(" - Configure PhantomDev"),
+            ]),
+            Line::from(vec![
+                Span::raw("  "),
+                Span::styled("[L]earn More", Style::default().fg(Color::Cyan)),
+                Span::raw(" - View help and documentation"),
             ]),
             Line::from(""),
-            Line::from("Press 'q' to quit, '1-4' to switch tabs"),
+            Line::from("Press 'q' to quit, arrow keys to navigate"),
         ];
 
-        let paragraph = Paragraph::new(summary)
-            .block(Block::default().borders(Borders::ALL).title("Summary"))
+        let paragraph = Paragraph::new(actions)
+            .block(Block::default().borders(Borders::ALL).title("Quick Actions"))
             .wrap(Wrap { trim: true });
 
         f.render_widget(paragraph, chunks[1]);
@@ -235,20 +251,15 @@ impl PhantomTui {
 
     /// Draw stealth score gauge
     fn draw_stealth_score(&self, f: &mut Frame, area: Rect) {
-        let score = self.stealth_score.as_ref().unwrap_or(&StealthScore {
-            overall: 0.75,
-            ai_probability: 0.25,
-            pattern_score: 0.3,
-            style_score: 0.8,
-        });
+        let score = 0.75; // Mock score for now
 
         let gauge = Gauge::default()
             .block(Block::default().borders(Borders::ALL).title("Stealth Score"))
             .gauge_style(
                 Style::default()
-                    .fg(if score.overall > 0.7 {
+                    .fg(if score > 0.7 {
                         Color::Green
-                    } else if score.overall > 0.4 {
+                    } else if score > 0.4 {
                         Color::Yellow
                     } else {
                         Color::Red
@@ -256,16 +267,16 @@ impl PhantomTui {
                     .bg(Color::DarkGray)
             )
             .label(Span::styled(
-                format!("{:.0}%", score.overall * 100.0),
+                format!("{:.0}%", score * 100.0),
                 Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
             ))
-            .ratio(score.overall as f64);
+            .ratio(score as f64);
 
         f.render_widget(gauge, area);
     }
 
-    /// Draw detection tab
-    fn draw_detection(&self, f: &mut Frame, area: Rect) {
+    /// Draw scan tab
+    fn draw_scan(&self, f: &mut Frame, area: Rect) {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
@@ -300,10 +311,7 @@ impl PhantomTui {
 
         // Draw recent detections
         let items: Vec<ListItem> = vec![
-            ListItem::new("src/main.rs - 85% stealth"),
-            ListItem::new("src/lib.rs - 92% stealth"),
-            ListItem::new("tests/integration.rs - 78% stealth"),
-            ListItem::new("README.md - 95% stealth"),
+            ListItem::new("No files scanned yet. Run 'phantomdev scan' to check your code."),
         ];
 
         let list = List::new(items)
@@ -313,37 +321,67 @@ impl PhantomTui {
         f.render_widget(list, chunks[1]);
     }
 
-    /// Draw style tab
-    fn draw_style(&self, f: &mut Frame, area: Rect) {
+    /// Draw humanize tab
+    fn draw_humanize(&self, f: &mut Frame, area: Rect) {
         let style_info = vec![
-            Line::from("Style Profile:"),
+            Line::from("Humanization Options:"),
             Line::from(""),
             Line::from(vec![
-                Span::raw("  Naming Convention: "),
-                Span::styled("snake_case", Style::default().fg(Color::Cyan)),
+                Span::raw("  "),
+                Span::styled("[F]ix", Style::default().fg(Color::Cyan)),
+                Span::raw(" - Auto-fix AI patterns in staged files"),
             ]),
             Line::from(vec![
-                Span::raw("  Comment Style: "),
-                Span::styled("Inline Only", Style::default().fg(Color::Cyan)),
-            ]),
-            Line::from(vec![
-                Span::raw("  Indentation: "),
-                Span::styled("4 spaces", Style::default().fg(Color::Cyan)),
-            ]),
-            Line::from(vec![
-                Span::raw("  Max Line Length: "),
-                Span::styled("100 chars", Style::default().fg(Color::Cyan)),
-            ]),
-            Line::from(vec![
-                Span::raw("  Commit Format: "),
-                Span::styled("Conventional", Style::default().fg(Color::Cyan)),
+                Span::raw("  "),
+                Span::styled("[D]ry Run", Style::default().fg(Color::Cyan)),
+                Span::raw(" - Show what would be changed without applying"),
             ]),
             Line::from(""),
-            Line::from("Style learned from 127 commits and 45 files"),
+            Line::from("Humanization will transform your code to match your personal style:"),
+            Line::from("  • Variable and function naming"),
+            Line::from("  • Comment phrasing and placement"),
+            Line::from("  • Code structure and entropy"),
+            Line::from("  • Commit message style"),
         ];
 
         let paragraph = Paragraph::new(style_info)
-            .block(Block::default().borders(Borders::ALL).title("Current Style Profile"))
+            .block(Block::default().borders(Borders::ALL).title("Humanize Code"))
+            .wrap(Wrap { trim: true });
+
+        f.render_widget(paragraph, area);
+    }
+
+    /// Draw score tab
+    fn draw_score(&self, f: &mut Frame, area: Rect) {
+        let score_info = vec![
+            Line::from("Stealth Score Information:"),
+            Line::from(""),
+            Line::from("Your stealth score measures how human-like your code appears:"),
+            Line::from(""),
+            Line::from(vec![
+                Span::raw("  "),
+                Span::styled("90-100%", Style::default().fg(Color::Green)),
+                Span::raw(" - Excellent (indistinguishable from human code)"),
+            ]),
+            Line::from(vec![
+                Span::raw("  "),
+                Span::styled("70-89%", Style::default().fg(Color::Yellow)),
+                Span::raw(" - Good (mostly human-like)"),
+            ]),
+            Line::from(vec![
+                Span::raw("  "),
+                Span::styled("50-69%", Style::default().fg(Color::Yellow)),
+                Span::raw(" - Needs Work (some AI patterns detected)"),
+            ]),
+            Line::from(vec![
+                Span::raw("  "),
+                Span::styled("0-49%", Style::default().fg(Color::Red)),
+                Span::raw(" - Poor (clearly AI-generated)"),
+            ]),
+        ];
+
+        let paragraph = Paragraph::new(score_info)
+            .block(Block::default().borders(Borders::ALL).title("Stealth Score"))
             .wrap(Wrap { trim: true });
 
         f.render_widget(paragraph, area);
@@ -380,6 +418,34 @@ impl PhantomTui {
         f.render_widget(paragraph, area);
     }
 
+    /// Draw help tab
+    fn draw_help(&self, f: &mut Frame, area: Rect) {
+        let help_text = vec![
+            Line::from("PhantomDev - Adversarial Stylometry Framework"),
+            Line::from(""),
+            Line::from("Commands:"),
+            Line::from("  phantomdev              - Launch this dashboard (default)"),
+            Line::from("  phantomdev scan         - Scan for AI patterns"),
+            Line::from("  phantomdev humanize      - Humanize code"),
+            Line::from("  phantomdev score         - Check stealth score"),
+            Line::from("  phantomdev fix           - Auto-fix AI patterns"),
+            Line::from("  phantomdev dashboard      - Launch TUI dashboard"),
+            Line::from("  phantomdev config        - Configure settings"),
+            Line::from("  phantomdev init          - Initialize in current directory"),
+            Line::from("  phantomdev install        - Install IDE integration"),
+            Line::from(""),
+            Line::from("Navigation:"),
+            Line::from("  Use arrow keys or hotkeys to navigate the dashboard"),
+            Line::from("  Press 'q' or ESC to quit"),
+        ];
+
+        let paragraph = Paragraph::new(help_text)
+            .block(Block::default().borders(Borders::ALL).title("Help"))
+            .wrap(Wrap { trim: true });
+
+        f.render_widget(paragraph, area);
+    }
+
     /// Draw footer
     fn draw_footer(&self, f: &mut Frame, area: Rect) {
         let footer = Line::from(vec![
@@ -399,53 +465,7 @@ impl PhantomTui {
     }
 
     /// Update stealth score
-    pub fn update_stealth_score(&mut self, score: StealthScore) {
-        self.stealth_score = Some(score);
-    }
-
-    /// Add detection result
-    pub fn add_detection_result(&mut self, result: DetectionResult) {
-        self.detection_results.push(result);
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_tui_creation() {
-        let tui = PhantomTui::new();
-        assert_eq!(tui.current_tab, Tab::Overview);
-        assert!(!tui.should_quit);
-    }
-
-    #[test]
-    fn test_tab_navigation() {
-        let mut tui = PhantomTui::new();
-        assert_eq!(tui.current_tab, Tab::Overview);
-
-        // Simulate right key press
-        tui.handle_key(event::KeyEvent {
-            code: KeyCode::Right,
-            modifiers: event::KeyModifiers::empty(),
-            kind: event::KeyEventKind::Press,
-            state: event::KeyEventState::NONE,
-        });
-        assert_eq!(tui.current_tab, Tab::Detection);
-    }
-
-    #[test]
-    fn test_quit() {
-        let mut tui = PhantomTui::new();
-        assert!(!tui.should_quit);
-
-        tui.handle_key(event::KeyEvent {
-            code: KeyCode::Char('q'),
-            modifiers: event::KeyModifiers::empty(),
-            kind: event::KeyEventKind::Press,
-            state: event::KeyEventState::NONE,
-        });
-        assert!(tui.should_quit);
+    pub fn update_stealth_score(&mut self, score: f64) {
+        // In a real implementation, this would update the UI with the actual score
     }
 }

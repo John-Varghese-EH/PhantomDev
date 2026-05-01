@@ -123,96 +123,67 @@ curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash
 
 ## Quick Start
 
-### Step 1: Install
+### Installation
+
+#### Recommended (Easy Install)
 
 ```bash
 curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash
 ```
 
-### Step 2: Go to your project
+#### From crates.io
 
 ```bash
-cd your-project
+cargo install phantomdev
 ```
 
-### Step 3: Check your code
+#### From Source
 
 ```bash
-phantomdev
+git clone https://github.com/John-Varghese-EH/PhantomDev.git
+cd PhantomDev
+cargo build --release
+cargo install --path crates/cli
 ```
 
-This will show your stealth score and suggest what to do next.
-
-### Step 4: Fix AI patterns
-
-```bash
-phantomdev fix
-```
-
-That's it! Your code is now humanized.
-
----
-
-## Usage
+### Usage
 
 PhantomDev is designed to be simple. Just run `phantomdev` and it will guide you.
 
-### Basic Commands
+#### Basic Commands
 
 ```bash
-phantomdev              # Check status and get suggestions
-phantomdev fix          # Auto-fix AI patterns in staged files
-phantomdev scan         # See what's detected
+phantomdev              # Launch dashboard (default command)
+phantomdev scan         # Scan for AI patterns
+phantomdev humanize      # Humanize code
 phantomdev score         # Check your stealth score
-phantomdev dashboard    # Launch visual dashboard
+phantomdev dashboard      # Launch TUI dashboard
 phantomdev config       # View or change settings
 phantomdev install      # Install IDE integration
 ```
 
-### Typical Workflow
+#### Typical Workflow
 
 1. **Stage your files**
    ```bash
    git add your-files
    ```
 
-2. **Check what's detected**
+2. **Launch dashboard (default)**
    ```bash
-   phantomdev scan
+   phantomdev
    ```
 
-3. **Fix AI patterns**
+3. **Or scan and fix AI patterns**
    ```bash
-   phantomdev fix
+   phantomdev scan
+   phantomdev humanize
    ```
 
 4. **Commit**
    ```bash
    git commit -m "your message"
    ```
-
-### Advanced Options
-
-```bash
-# Fix specific files
-phantomdev fix --files src/main.rs
-
-# See what would change without applying
-phantomdev fix --dry-run
-
-# Detailed score breakdown
-phantomdev score --detailed
-
-# Reset settings to defaults
-phantomdev config --reset
-
-# Install IDE integration
-phantomdev install --ide claude
-phantomdev install --ide all
-```
-pre-commit install
-pre-commit run --all-files
-```
 
 ---
 
@@ -305,8 +276,6 @@ PhantomDev is officially published on crates.io. You can easily install the CLI 
 cargo install phantomdev
 ```
 
-*(For detailed workspace publishing instructions, see [cargo-instruction.md](cargo-instruction.md))*
-
 ## Documentation
 
 Full documentation is available at [john-varghese-eh.github.io/PhantomDev](https://john-varghese-eh.github.io/PhantomDev/)
@@ -337,7 +306,7 @@ This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) fo
 ## Disclaimer
 
 **For Educational and Experimental Purposes Only.** 
-PhantomDev is provided "as is" to explore adversarial stylometry and help developers protect their coding signatures. It is not intended to bypass academic integrity systems, cheat in evaluations, or be used maliciously. The author (John Varghese) and contributors are not liable for any misuse of this tool or any consequences arising from its usage. Use responsibly.
+PhantomDev is provided "as is" to explore adversarial stylometry and help developers protect their coding signatures. It is not intended to bypass integrity systems, cheat in evaluations, or be used maliciously. The author (John Varghese) and contributors are not liable for any misuse of this tool or any consequences arising from its usage. Use responsibly.
 
 ## Changelog
 

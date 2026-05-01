@@ -1,73 +1,26 @@
-#!/usr/bin/env bash
-#
-# PhantomDev Installer
-# Adversarial Stylometry Framework for the AI-Augmented Developer
-#
-# Usage: curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash
-#        or: ./install.sh [options]
-#
-# Options:
-#   --version <version>    Install specific version
-#   --prefix <path>       Install to custom prefix (default: ~/.local)
-#   --force               Force reinstall even if already installed
-#   --no-deps             Skip dependency installation
-#   --help                Show this help message
-#
+#!/bin/bash
+# PhantomDev Advanced Installer
+# This script installs PhantomDev on Linux, macOS, and Windows (via WSL)
 
 set -euo pipefail
 
-# Colors
+# Colors for output
 RED='\033[0;31m'
-GREEN='\033[0;32m'
+GREEN='\033[0;31m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\034[0m' # No Color
+BOLD='\033[1m'
 
-# Configuration
-REPO="John-Varghese-EH/PhantomDev"
-DEFAULT_VERSION="latest"
-DEFAULT_PREFIX="${HOME}/.local"
-INSTALL_DIR="${DEFAULT_PREFIX}/bin"
-CONFIG_DIR="${HOME}/.config/phantomdev"
-DATA_DIR="${HOME}/.local/share/phantomdev"
+# Default values
+DEFAULT_PREFIX="\${HOME}/.local"
+DEFAULT_DATA_DIR="\${HOME}/.local/share/phantomdev"
+DEFAULT_CONFIG_DIR="\${HOME}/.config/phantomdev"
+DEFAULT_CACHE_DIR="\${HOME}/.cache/phantomdev"
 
-# Parse arguments
-VERSION="${DEFAULT_VERSION}"
-PREFIX="${DEFAULT_PREFIX}"
-FORCE=false
-SKIP_DEPS=false
-
-show_help() {
-    cat << EOF
-${CYAN}PhantomDev Installer${NC}
-
-${GREEN}Usage:${NC}
-    curl -sSL https://john-varghese-eh.github.io/PhantomDevinstall.sh | bash
-    ./install.sh [options]
-
-${GREEN}Options:${NC}
-    --version <version>    Install specific version (default: latest)
-    --prefix <path>       Install to custom prefix (default: ~/.local)
-    --force               Force reinstall even if already installed
-    --no-deps             Skip dependency installation
-    --help                Show this help message
-
-${GREEN}Examples:${NC}
-    ./install.sh --version 0.1.0
-    ./install.sh --prefix /usr/local
-    curl -sSL https://john-varghese-eh.github.io/PhantomDevinstall.sh | bash -s -- --version 0.1.0
-
-${GREEN}Environment Variables:${NC}
-    PHANTOMDEV_VERSION     Override version
-    PHANTOMDEV_PREFIX      Override install prefix
-    PHANTOMDEV_FORCE       Force reinstall (1=true)
-
-${YELLOW}For more information, visit: https://john-varghese-eh.github.io/PhantomDev/${NC}
-EOF
-}
-
+# Print functions with colors
 print_header() {
     echo -e "${PURPLE}"
     cat << "EOF"
@@ -95,295 +48,145 @@ print_info() {
     echo -e "${BLUE}→${NC} $1"
 }
 
+print_header
+
+# Default values
+VERSION="latest"
+PREFIX="\${DEFAULT_PREFIX}"
+DATA_DIR="\${DEFAULT_DATA_DIR}"
+CONFIG_DIR="\${DEFAULT_CONFIG_DIR}"
+CACHE_DIR="\${DEFAULT_CACHE_DIR}"
+FORCE=false
+SKIP_DEPS=false
+VERBOSE=false
+PLATFORM=""
+ARCHITECTURE=""
+
+# Parse arguments
+while [[ \$# -gt 0 ]]; do
+    case \$1 in
+        --version)
+            VERSION="\$2"
+            shift 2
+            ;;
+        --prefix)
+            PREFIX="\$2"
+            shift 2
+            ;;
+        --data-dir)
+            DATA_DIR="\$2"
+            shift 2
+            ;;
+        --config-dir)
+            CONFIG_DIR="\$2"
+            shift 2
+            ;;
+        --cache-dir)
+            CACHE_DIR="\$2"
+            shift 2
+            ;;
+        --force)
+            FORCE=true
+            shift
+            ;;
+        --skip-deps)
+            SKIP_DEPS=true
+            shift
+            ;;
+        --verbose)
+            VERBOSE=true
+            shift
+            ;;
+        --help|-h)
+            show_help
+            exit 0
+            ;;
+        *)
+            print_error "Unknown option: \$1"
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+# Detect platform
 detect_platform() {
-    OS="$(uname -s)"
-    ARCH="$(uname -m)"
-
-    case "${OS}" in
-        Linux*)  OS="linux" ;;
-        Darwin*) OS="macos" ;;
+    case "\$(uname -s)" in
+        Linux*)     PLATFORM="linux" ;;
+        Darwin*)    PLATFORM="macos" ;;
         MINGW*|MSYS*|CYGWIN*)
-            OS="windows"
+            PLATFORM="windows"
             ;;
         *)
-            print_error "Unsupported OS: ${OS}"
-            exit 1
+            PLATFORM="unknown"
             ;;
     esac
+}
 
-    case "${ARCH}" in
-        x86_64|amd64)  ARCH="x86_64" ;;
-        aarch64|arm64) ARCH="aarch64" ;;
-        armv7l)        ARCH="armv7" ;;
-        i386|i686)     ARCH="i686" ;;
+detect_architecture() {
+    case "\$(uname -m)" in
+        x86_64|amd64)  ARCHITECTURE="x86_64" ;;
+        aarch64|arm64) ARCHITECTURE="aarch64" ;;
+        armv7l)        ARCHITECTURE="armv7" ;;
+        i386|i686)     ARCHITECTURE="i686" ;;
         *)
-            print_error "Unsupported architecture: ${ARCH}"
-            exit 1
+            ARCHITECTURE="unknown"
             ;;
     esac
-
-    print_info "Detected platform: ${OS}-${ARCH}"
 }
 
-check_dependencies() {
-    if [ "${SKIP_DEPS}" = true ]; then
-        print_warning "Skipping dependency check"
-        return
-    fi
+# Show help
+show_help() {
+    cat << EOF
+${CYAN}PhantomDev Advanced Installer${NC}
 
-    print_info "Checking dependencies..."
+${GREEN}Usage:${NC}
+    ./install.sh [options]
+    curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash [options]
 
-    local missing_deps=()
+${GREEN}Options:${NC}
+    --version <version>        Install specific version (default: latest)
+    --prefix <path>           Install to custom prefix (default: ~/.local)
+    --data-dir <path>        Data directory (default: ~/.local/share/phantomdev)
+    --config-dir <path>       Config directory (default: ~/.config/phantomdev)
+    --cache-dir <path>        Cache directory (default: ~/.cache/phantomdev)
+    --force                  Force reinstall even if already installed
+    --skip-deps              Skip dependency installation
+    --verbose                Show detailed output
+    --help                   Show this help message
 
-    # Check for curl
-    if ! command -v curl &> /dev/null; then
-        missing_deps+=("curl")
-    fi
+${GREEN}Examples:${NC}
+    ./install.sh --version 0.1.0
+    ./install.sh --prefix /usr/local
+    curl -sSL https://john-varghese-eh.github.io/PhantomDev/install.sh | bash -s -- --version 0.1.0
 
-    # Check for tar
-    if ! command -v tar &> /dev/null; then
-        missing_deps+=("tar")
-    fi
-
-    # Check for gzip
-    if ! command -v gzip &> /dev/null; then
-        missing_deps+=("gzip")
-    fi
-
-    if [ ${#missing_deps[@]} -gt 0 ]; then
-        print_error "Missing dependencies: ${missing_deps[*]}"
-        echo ""
-        print_info "Install them using:"
-        case "${OS}" in
-            linux)
-                if command -v apt-get &> /dev/null; then
-                    echo "  sudo apt-get install ${missing_deps[*]}"
-                elif command -v yum &> /dev/null; then
-                    echo "  sudo yum install ${missing_deps[*]}"
-                elif command -v pacman &> /dev/null; then
-                    echo "  sudo pacman -S ${missing_deps[*]}"
-                fi
-                ;;
-            macos)
-                echo "  brew install ${missing_deps[*]}"
-                ;;
-        esac
-        exit 1
-    fi
-
-    print_success "All dependencies found"
+${YELLOW}For more information, visit: https://john-varghese-eh.github.io/PhantomDev/${NC}
+EOF
 }
 
-check_existing_installation() {
-    if [ "${FORCE}" = true ]; then
-        print_warning "Force reinstall enabled"
-        return
-    fi
-
-    if [ -f "${INSTALL_DIR}/phantomdev" ]; then
-        local current_version
-        current_version=$("${INSTALL_DIR}/phantomdev" --version 2>/dev/null || echo "unknown")
-        print_warning "PhantomDev is already installed at ${INSTALL_DIR}"
-        print_info "Current version: ${current_version}"
-        echo ""
-        print_info "To reinstall, use: ./install.sh --force"
-        exit 0
-    fi
-}
-
-get_latest_version() {
-    if [ "${VERSION}" != "latest" ]; then
-        echo "${VERSION}"
-        return
-    fi
-
-    print_info "Fetching latest version..."
-    VERSION=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-
-    if [ -z "${VERSION}" ]; then
-        print_error "Failed to fetch latest version"
-        exit 1
-    fi
-
-    print_success "Latest version: ${VERSION}"
-}
-
-download_binary() {
-    local binary_name="phantomdev-${OS}-${ARCH}"
-    local download_url="https://github.com/${REPO}/releases/download/${VERSION}/${binary_name}"
-
-    print_info "Downloading from ${download_url}..."
-
-    local temp_dir
-    temp_dir=$(mktemp -d)
-
-    if ! curl -fsSL "${download_url}" -o "${temp_dir}/phantomdev"; then
-        print_error "Failed to download binary"
-        rm -rf "${temp_dir}"
-        exit 1
-    fi
-
-    chmod +x "${temp_dir}/phantomdev"
-
-    # Verify binary
-    if ! "${temp_dir}/phantomdev" --version &> /dev/null; then
-        print_error "Downloaded binary is not valid"
-        rm -rf "${temp_dir}"
-        exit 1
-    fi
-
-    echo "${temp_dir}"
-}
-
-install_binary() {
-    local temp_dir="$1"
-
-    print_info "Installing to ${INSTALL_DIR}..."
-
-    # Create install directory
-    mkdir -p "${INSTALL_DIR}"
-
-    # Copy binary
-    cp "${temp_dir}/phantomdev" "${INSTALL_DIR}/phantomdev"
-    chmod +x "${INSTALL_DIR}/phantomdev"
-
-    # Create config directory
-    mkdir -p "${CONFIG_DIR}"
-
-    # Create data directory
-    mkdir -p "${DATA_DIR}"
-
-    # Clean up
-    rm -rf "${temp_dir}"
-
-    print_success "Installed successfully"
-}
-
-setup_shell_integration() {
-    local shellrc=""
-    local shell_name=""
-
-    # Detect shell
-    if [ -n "${ZSH_VERSION}" ]; then
-        shellrc="${HOME}/.zshrc"
-        shell_name="zsh"
-    elif [ -n "${BASH_VERSION}" ]; then
-        shellrc="${HOME}/.bashrc"
-        shell_name="bash"
-    elif [ -f "${HOME}/.zshrc" ]; then
-        shellrc="${HOME}/.zshrc"
-        shell_name="zsh"
-    elif [ -f "${HOME}/.bashrc" ]; then
-        shellrc="${HOME}/.bashrc"
-        shell_name="bash"
-    else
-        print_warning "Could not detect shell, skipping shell integration"
-        return
-    fi
-
-    # Check if already in PATH
-    if echo ":${PATH}:" | grep -q ":${INSTALL_DIR}:"; then
-        print_success "${INSTALL_DIR} already in PATH"
-        return
-    fi
-
-    print_info "Adding ${INSTALL_DIR} to PATH in ${shellrc}..."
-
-    # Add to shellrc
-    echo "" >> "${shellrc}"
-    echo "# PhantomDev" >> "${shellrc}"
-    echo "export PATH=\"${INSTALL_DIR}:\${PATH}\"" >> "${shellrc}"
-
-    print_success "Added to PATH. Restart your shell or run:"
-    echo ""
-    echo "  export PATH=\"${INSTALL_DIR}:\${PATH}\""
-}
-
-print_post_install() {
-    echo ""
-    echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}  Installation complete!${NC}"
-    echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
-    echo ""
-    print_info "Binary location: ${INSTALL_DIR}/phantomdev"
-    print_info "Config directory: ${CONFIG_DIR}"
-    print_info "Data directory: ${DATA_DIR}"
-    echo ""
-    print_info "Quick start:"
-    echo ""
-    echo "  phantomdev init          # Initialize in current directory"
-    echo "  phantomdev scan         # Scan for AI patterns"
-    echo "  phantomdev humanize     # Humanize code"
-    echo "  phantomdev score        # Check stealth score"
-    echo "  phantomdev dashboard    # Launch TUI"
-    echo ""
-    print_info "For more information:"
-    echo ""
-    echo "  phantomdev --help"
-    echo "  https://github.com/${REPO}"
-    echo ""
-}
-
+# Main installation function
 main() {
-    # Parse arguments
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            --version)
-                VERSION="$2"
-                shift 2
-                ;;
-            --prefix)
-                PREFIX="$2"
-                INSTALL_DIR="${PREFIX}/bin"
-                shift 2
-                ;;
-            --force)
-                FORCE=true
-                shift
-                ;;
-            --no-deps)
-                SKIP_DEPS=true
-                shift
-                ;;
-            --help|-h)
-                show_help
-                exit 0
-                ;;
-            *)
-                print_error "Unknown option: $1"
-                show_help
-                exit 1
-                ;;
-        esac
-    done
-
-    # Override with environment variables
-    VERSION="${PHANTOMDEV_VERSION:-${VERSION}}"
-    PREFIX="${PHANTOMDEV_PREFIX:-${PREFIX}}"
-    INSTALL_DIR="${PREFIX}/bin"
-    FORCE="${PHANTOMDEV_FORCE:-${FORCE}}"
-
-    # Print header
     print_header
-
-    # Detect platform
     detect_platform
+    detect_architecture
+
+    print_info "Detected platform: \${PLATFORM}-\${ARCHITECTURE}"
 
     # Check dependencies
-    check_dependencies
+    if [ "\${SKIP_DEPS}" = false ]; then
+        check_dependencies
+    fi
 
     # Check existing installation
-    check_existing_installation
+    if [ "\${FORCE}" = false ]; then
+        check_existing_installation
+    fi
 
     # Get version
-    get_latest_version
+    get_version
 
-    # Download binary
-    local temp_dir
-    temp_dir=$(download_binary)
-
-    # Install binary
-    install_binary "${temp_dir}"
+    # Download and install
+    download_and_install
 
     # Setup shell integration
     setup_shell_integration
@@ -392,5 +195,5 @@ main() {
     print_post_install
 }
 
-# Run main function
-main "$@"
+# Run main
+main
