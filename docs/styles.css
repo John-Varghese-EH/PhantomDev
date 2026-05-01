@@ -673,12 +673,21 @@ body {
     color: var(--accent-primary);
 }
 
+.footer-disclaimer {
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+
 .footer-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-color);
     color: var(--text-muted);
     font-size: 0.875rem;
 }
