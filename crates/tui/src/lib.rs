@@ -14,18 +14,17 @@ use ratatui::{
     style::{Color, Modifier, Style},
     text::{Span, Line},
     widgets::{
-        Block, Borders, Gauge, Paragraph, Wrap, BarChart, List, ListItem, Tabs,
+        Block, Borders, Gauge, Paragraph, Wrap, BarChart, List, ListItem, Tabs, Table, Row, Cell,
     },
     Frame, Terminal,
 };
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEvent, KeyModifiers},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::io;
 use std::time::Duration;
-use std::process::Command;
 use phantomdev_core::{StealthScore, DetectionResult};
 
 /// Main TUI application
@@ -34,8 +33,36 @@ pub struct PhantomTui {
     current_tab: Tab,
     /// Should quit
     should_quit: bool,
-    /// Current working directory
-    cwd: String,
+    /// File browser state
+    file_browser: FileBrowserState,
+    /// Current stealth score
+    stealth_score: f64,
+    /// Scan results
+    scan_results: Vec<DetectionResult>,
+}
+
+/// File browser state for managing file selection
+#[derive(Debug, Clone)]
+struct FileBrowserState {
+    current_files: Vec<String>,
+    selected_file: Option<usize>,
+    scan_mode: ScanMode,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum ScanMode {
+    StagedFiles,
+    AllFiles,
+}
+
+impl Default for FileBrowserState {
+    fn default() -> Self {
+        Self {
+            current_files: Vec::new(),
+            selected_file: None,
+            scan_mode: ScanMode::StagedFiles,
+        }
+    }
 }
 
 /// Available tabs
@@ -73,6 +100,9 @@ impl PhantomTui {
             current_tab: Tab::Dashboard,
             should_quit: false,
             cwd: std::env::current_dir().unwrap_or_default().to_string_lossy().to_string(),
+            file_browser: FileBrowserState::default(),
+            stealth_score: 0.75,
+            scan_results: Vec::new(),
         }
     }
 
@@ -134,6 +164,38 @@ impl PhantomTui {
             KeyCode::Char('c') => self.current_tab = Tab::Score,
             KeyCode::Char('g') => self.current_tab = Tab::Settings,
             KeyCode::Char('l') => self.current_tab = Tab::Help,
+            KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                // Ctrl+F to scan all files
+                self.file_browser.scan_mode = ScanMode::AllFiles;
+                self.scan_all_files();
+            }
+            KeyCode::Char('S') if key.modifiers.contains(KeyModifiers::SHIFT) => {
+                // Shift+S to scan staged files
+                self.file_browser.scan_mode = ScanMode::StagedFiles;
+                self.scan_staged_files();
+            }
+            KeyCode::Down => {
+                if let Some(selected) = self.file_browser.selected_file {
+                    if selected < self.file_browser.current_files.len().saturating_sub(1) {
+                        self.file_browser.selected_file = Some(selected + 1);
+                    }
+                } else if !self.file_browser.current_files.is_empty() {
+                    self.file_browser.selected_file = Some(0);
+                }
+            }
+            KeyCode::Up => {
+                if let Some(selected) = self.file_browser.selected_file {
+                    if selected > 0 {
+                        self.file_browser.selected_file = Some(selected - 1);
+                    }
+                }
+            }
+            KeyCode::Enter => {
+                // Enter to select file or run scan
+                if self.current_tab == Tab::Scan {
+                    self.run_scan();
+                }
+            }
             _ => {}
         }
     }
@@ -164,7 +226,6 @@ impl PhantomTui {
             Tab::Score => self.draw_score(f, chunks[1]),
             Tab::Settings => self.draw_settings(f, chunks[1]),
             Tab::Help => self.draw_help(f, chunks[1]),
-            Tab::Dashboard => self.draw_dashboard(f, chunks[1]),
         }
 
         // Draw footer
@@ -465,7 +526,7 @@ impl PhantomTui {
     }
 
     /// Update stealth score
-    pub fn update_stealth_score(&mut self, score: f64) {
+    pub fn update_stealth_score(&mut self, _score: f64) {
         // In a real implementation, this would update the UI with the actual score
     }
 }

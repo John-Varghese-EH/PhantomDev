@@ -372,8 +372,8 @@ cargo install --path crates/cli</code>
             <p>Interactive knowledge graph of the PhantomDev codebase</p>
         </div>
         <div class="graph-embed">
-            <iframe src="graph.html" id="codebase-graph" title="PhantomDev Codebase Graph" scrolling="no" frameborder="0"
-                allowtransparency="true">
+            <iframe src="graph.html" id="codebase-graph" title="PhantomDev Codebase Graph" scrolling="no"
+                frameborder="0" allowtransparency="true">
             </iframe>
             <div class="graph-overlay" id="graph-overlay">
                 <div class="graph-overlay-hint">
@@ -409,7 +409,8 @@ cargo install --path crates/cli</code>
                 </a>
                 <a href="https://docs.rs/phantomdev" class="btn btn-secondary">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z" />
                     </svg>
                     Read Docs
                 </a>
@@ -460,15 +461,21 @@ cargo install --path crates/cli</code>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 PhantomDev. Built with <span class="heart">♥</span> by John Varghese (J0X)</p>
-                <p>MIT License</p>
-                <p style="font-size: 0.8em; color: #666; margin-top: 10px;">**For Educational and Experimental Purposes Only.**
-PhantomDev is provided "as is" to explore adversarial stylometry and help developers protect their coding signatures. It is not intended to bypass integrity systems, cheat in evaluations, or be used maliciously. The author (John Varghese) and contributors are not liable for any misuse of this tool or any consequences arising from its usage. Use responsibly.</p>
+                <p style="font-size: 0.8em; color: #666; margin-top: 10px;">**For Educational and Experimental Purposes
+                    Only.**
+                    PhantomDev is provided "as is" to explore adversarial stylometry and help developers protect their
+                    coding signatures. It is not intended to bypass integrity systems, cheat in evaluations, or be used
+                    maliciously. The author (John Varghese) and contributors are not liable for any misuse of this tool
+                    or any consequences arising from its usage. Use responsibly.</p><br>
+                <p>&copy; <span id="current-year"></span> PhantomDev. Built with <span class="heart">♥</span> by John Varghese (J0X)</p>
+                <p>Apache 2.0 License</p>
             </div>
         </div>
     </footer>
 
     <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
         function copyCode(button) {
             const codeBlock = button.parentElement;
             const code = codeBlock.querySelector('code').textContent;

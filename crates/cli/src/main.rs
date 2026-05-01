@@ -4,9 +4,9 @@
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use colored::Colorize;
-use std::path::PathBuf;
-use std::io::{self, Write};
+use git2::Repository;
+
+/// PhantomDev - Make your AI code look human
 
 /// PhantomDev - Make your AI code look human
 #[derive(Parser)]
@@ -59,7 +59,7 @@ enum Commands {
         #[arg(short, long)]
         show: bool,
         /// Reset to defaults
-        #[0arg(short, long)]
+        #[arg(short, long)]
         reset: bool,
     },
     /// Initialize in current directory
@@ -93,17 +93,17 @@ fn main() -> Result<()> {
     }
 }
 
-fn cmd_fix(files: Vec<String>, dry_run: bool) -> Result<()> {
+fn cmd_fix(_files: Vec<String>, _dry_run: bool) -> Result<()> {
     // Implementation for fix command
     Ok(())
 }
 
-fn cmd_scan(files: Vec<String>) -> Result<()> {
+fn cmd_scan(_files: Vec<String>) -> Result<()> {
     // Implementation for scan command
     Ok(())
 }
 
-fn cmd_score(detailed: bool) -> Result<()> {
+fn cmd_score(_detailed: bool) -> Result<()> {
     // Implementation for score command
     Ok(())
 }
@@ -113,17 +113,17 @@ fn cmd_dashboard() -> Result<()> {
     Ok(())
 }
 
-fn cmd_config(show: bool, reset: bool) -> Result<()> {
+fn cmd_config(_show: bool, _reset: bool) -> Result<()> {
     // Implementation for config command
     Ok(())
 }
 
-fn cmd_init(force: bool) -> Result<()> {
+fn cmd_init(_force: bool) -> Result<()> {
     // Implementation for init command
     Ok(())
 }
 
-fn cmd_install(ide: Option<String>) -> Result<()> {
+fn cmd_install(_ide: Option<String>) -> Result<()> {
     // Implementation for install command
     Ok(())
 }
