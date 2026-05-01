@@ -5,8 +5,8 @@
 //! commit messages to bypass AI-detection filters.
 //!
 //! Built with ❤️ by John Varghese (J0X)
-//! GitHub: https://github.com/John-Varghese-EH
-//! LinkedIn: https://linkedin.com/in/John--Varghese
+//! GitHub: <https://github.com/John-Varghese-EH>
+//! LinkedIn: <https://linkedin.com/in/John-Varghese>
 
 use regex::Regex;
 use rand::Rng;

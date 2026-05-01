@@ -4,7 +4,6 @@
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use git2::Repository;
 
 /// PhantomDev - Make your AI code look human
 

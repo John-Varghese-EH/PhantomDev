@@ -84,6 +84,14 @@ jobs:
           toolchain: stable
           targets: ${{ matrix.target }}
 
+      - name: Install OpenSSL (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install openssl@3
+          echo "OPENSSL_DIR=/opt/homebrew/opt/openssl@3" >> $GITHUB_ENV
+          echo "OPENSSL_LIB_DIR=/opt/homebrew/opt/openssl@3/lib" >> $GITHUB_ENV
+          echo "OPENSSL_INCLUDE_DIR=/opt/homebrew/opt/openssl@3/include" >> $GITHUB_ENV
+
       - name: Build release
         run: cargo build --release --target ${{ matrix.target }}
 
@@ -107,7 +115,7 @@ jobs:
         run: cargo install cargo-audit
 
       - name: Run cargo audit
-        run: cargo audit --config audit.toml
+        run: cargo audit
 
   docs:
     name: Documentation
