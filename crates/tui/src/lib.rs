@@ -23,7 +23,6 @@ use crossterm::{
 };
 use std::io;
 use std::time::Duration;
-use phantomdev_core::DetectionResult;
 
 /// Main TUI application
 pub struct PhantomTui {
