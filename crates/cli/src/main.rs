@@ -108,8 +108,8 @@ fn cmd_score(_detailed: bool) -> Result<()> {
 }
 
 fn cmd_dashboard() -> Result<()> {
-    // Implementation for dashboard command
-    Ok(())
+    let mut tui = phantomdev_tui::PhantomTui::new();
+    tui.run()
 }
 
 fn cmd_config(_show: bool, _reset: bool) -> Result<()> {
